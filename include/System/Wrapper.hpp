@@ -9,6 +9,13 @@ BEG_NAMESPACE_HAZ
 template <typename T>
 class Wrapper : public Object {
 public:
+    typedef       T         type;
+    typedef const T         constant;
+    typedef       T*        pointer;
+    typedef const T*        const_pointer;
+    typedef       T&        reference;
+    typedef const T&        const_reference;
+
     inline Wrapper<T>(T v = Wrapper<T>::default_value) : value(v) {}
     inline ~Wrapper() {};
     inline Wrapper(Wrapper const& base) : value(base.value) {}

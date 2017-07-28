@@ -5,18 +5,10 @@
 
 BEG_NAMESPACE_HAZ
 
-template<typename Value>
+template<typename T>
 class DynamicArray : public Object {
 public:
-    typedef const Value             Value_const;
-    typedef       Value*            Value_ptr;
-    typedef       Value&            Value_ref;
-    typedef const Value_ptr         Value_const_ptr;
-    typedef const Value_ref         Value_const_ref;
-
-    static const bool is_pointer = std::is_pointer<Value>::value;
-
-    DynamicArray<Value>() : _data(new Value[capacity_start]), _size(0), _capacity(capacity_start) {}
+    DynamicArray<T>() : _data(new T[capacity_start]), _size(0), _capacity(capacity_start) {}
 
     ~DynamicArray() {
         SAFE_DELETE_ARR(_data)
@@ -39,7 +31,7 @@ public:
         return str + "}";
     }
 
-    void push(Value v) {
+    void push(T v) {
         ++_size;
         check_resize();
 
@@ -55,7 +47,7 @@ public:
     }
 
 private:
-    Value_ptr _data = nullptr;
+    typename T::pointer _data = nullptr;
     unsigned long _size;
     unsigned long _capacity;
     static const unsigned long capacity_start = 8;
@@ -64,9 +56,9 @@ private:
         if (_size <= _capacity)
             return false;
 
-        Value_ptr new_data = new Value[_capacity * 2];
-        Value_ptr cur = new_data;
-        Value_ptr old = _data;
+        typename T::pointer new_data = new T[_capacity * 2];
+        typename T::pointer cur = new_data;
+        typename T::pointer old = _data;
         for (unsigned long i = 0; i < _capacity; ++i, ++cur, ++old)
             *cur = *old;
 
@@ -77,9 +69,8 @@ private:
         return true;
     }
 
-    Object::TString value_to_string (typename std::remove_pointer<Value>::type* v) const { return v->to_string(); }
-
-    Object::TString value_to_string (typename std::remove_pointer<Value>::type v) const { return v.to_string(); }
+    Object::TString value_to_string (typename std::remove_pointer<T>::type* v) const { return v->to_string(); }
+    Object::TString value_to_string (typename std::remove_pointer<T>::type  v) const { return v.to_string();  }
 };
 
 
