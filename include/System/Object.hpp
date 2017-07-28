@@ -24,6 +24,8 @@ public:
 
     TypeInfo getType() const;
 
+    virtual int hash() const = 0;
+
 private:
     static const TString demangle(const char* name);
 };

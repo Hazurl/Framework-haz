@@ -20,4 +20,8 @@ const Object::TString Object::demangle(const char* name) {
     return ret_val;
 }
 
+Object::TString Object::to_string() const {
+    return getType().name + std::to_string(hash());
+}
+
 END_NAMESPACE_HAZ
