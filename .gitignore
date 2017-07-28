@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# Useless directories
+.vscodes
+build/
