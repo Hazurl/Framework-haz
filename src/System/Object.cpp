@@ -24,4 +24,9 @@ Object::TString Object::to_string() const {
     return getType().name + std::to_string(hash());
 }
 
+std::ostream& operator<< (std::ostream& os, Object const& o) {
+    os << o.to_string();
+    return os;
+}
+
 END_NAMESPACE_HAZ

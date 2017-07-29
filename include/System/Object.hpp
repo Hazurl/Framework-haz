@@ -21,6 +21,7 @@ public:
 
     virtual ~Object();
     virtual TString to_string() const = 0;
+    friend std::ostream& operator<< (std::ostream& os, Object const& o);
 
     TypeInfo getType() const;
 

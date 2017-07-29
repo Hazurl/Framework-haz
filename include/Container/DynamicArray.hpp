@@ -31,11 +31,27 @@ public:
         return str + "}";
     }
 
-    void push(T v) {
+    int hash() const {
+        return 0;
+    }
+
+    T& push(T v) {
         ++_size;
         check_resize();
 
-        _data[_size - 1] = v;
+        return _data[_size - 1] = v;
+    }
+
+    T remove(unsigned long pos) {
+        HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size);
+
+        T out = _data[pos];
+        for (unsigned long i = pos + 1; i < _size; ++i) {
+            _data[i - 1] = _data[i];
+        }
+        --_size;
+
+        return out;
     }
 
     unsigned long size () const {
@@ -47,7 +63,7 @@ public:
     }
 
 private:
-    typename T::pointer _data = nullptr;
+    T* _data = nullptr;
     unsigned long _size;
     unsigned long _capacity;
     static const unsigned long capacity_start = 8;
@@ -56,9 +72,9 @@ private:
         if (_size <= _capacity)
             return false;
 
-        typename T::pointer new_data = new T[_capacity * 2];
-        typename T::pointer cur = new_data;
-        typename T::pointer old = _data;
+        T* new_data = new T[_capacity * 2];
+        T* cur = new_data;
+        T* old = _data;
         for (unsigned long i = 0; i < _capacity; ++i, ++cur, ++old)
             *cur = *old;
 

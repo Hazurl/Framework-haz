@@ -92,7 +92,7 @@ namespace __hide {
         OPERATOR(>>)
 
 
-        template<typename X> friend inline auto&         operator >> (X& x, Wrapper<T>& v) { return x >> v.value; }
+        template<typename X> friend inline auto&         operator >> (X& x, Wrapper<T>& v)                  { return x >> v.value; }
 
         // Objects
                                     inline Object::TString to_string() const;
