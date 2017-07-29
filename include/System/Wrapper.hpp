@@ -6,116 +6,118 @@
 
 BEG_NAMESPACE_HAZ
 
-template <typename T>
-class Wrapper : public Object {
-public:
-    typedef       T         type;
-    typedef const T         constant;
-    typedef       T*        pointer;
-    typedef const T*        const_pointer;
-    typedef       T&        reference;
-    typedef const T&        const_reference;
+namespace __hide {
+    template <typename T>
+    class Wrapper : public Object {
+    public:
+        typedef       T         type;
+        typedef const T         constant;
+        typedef       T*        pointer;
+        typedef const T*        const_pointer;
+        typedef       T&        reference;
+        typedef const T&        const_reference;
 
-    inline Wrapper<T>(T v = Wrapper<T>::default_value) : value(v) {}
-    inline ~Wrapper() {};
-    inline Wrapper(Wrapper const& base) : value(base.value) {}
-    
-            inline              operator T  ()    const  { return value;                            }
-            inline T&           get         ()           { return value;                            }
-            inline T const&     get         ()    const  { return value;                            }
+        static const  T         default_value;
 
-            inline Wrapper<T>&  operator =  (T v)        { value = v;  return *this;                }
+                                    inline Wrapper<T>(T v = Wrapper<T>::default_value) : value(v) {}
 
-            inline Wrapper<T>&  operator += (T v)        { value += v; return *this;                }
-            inline Wrapper<T>&  operator -= (T v)        { value -= v; return *this;                }
-            inline Wrapper<T>&  operator *= (T v)        { value *= v; return *this;                }
-            inline Wrapper<T>&  operator /= (T v)        { value /= v; return *this;                }
-            inline Wrapper<T>&  operator %= (T v)        { value %= v; return *this;                }
+                                    inline ~Wrapper() {};
+        template<typename X>        inline Wrapper(Wrapper<X> const& base) : value(base.value) {}
+        
+                                    inline              operator T  ()    const  { return value;                            }
+                                    inline T&           get         ()           { return value;                            }
+                                    inline T const&     get         ()    const  { return value;                            }
 
-            inline Wrapper<T>&  operator &= (T v)        { value &= v; return *this;                }
-            inline Wrapper<T>&  operator |= (T v)        { value |= v; return *this;                }
-            inline Wrapper<T>&  operator ^= (T v)        { value ^= v; return *this;                }
-            inline Wrapper<T>&  operator <<=(T v)        { value <<= v;return *this;                }
-            inline Wrapper<T>&  operator >>=(T v)        { value >>= v;return *this;                }
+        template<typename X>    	inline Wrapper<T>&  operator =  (X v)        { value = v;  return *this;                }
 
-            inline Wrapper<T>&  operator ++ ()           { ++value;    return *this;                }
-            inline Wrapper<T>   operator ++ (int)        { return Wrapper<T>(value++);              }
-            inline Wrapper<T>&  operator -- ()           { --value;    return *this;                }
-            inline Wrapper<T>   operator -- (int)        { return Wrapper<T>(value--);              }
+        template<typename X>    	inline Wrapper<T>&  operator += (X v)        { value += v; return *this;                }
+        template<typename X>    	inline Wrapper<T>&  operator -= (X v)        { value -= v; return *this;                }
+        template<typename X>    	inline Wrapper<T>&  operator *= (X v)        { value *= v; return *this;                }
+        template<typename X>    	inline Wrapper<T>&  operator /= (X v)        { value /= v; return *this;                }
+        template<typename X>    	inline Wrapper<T>&  operator %= (X v)        { value %= v; return *this;                }
 
-            inline bool         operator == (T v) const  { return value == v;                       }
-            inline bool         operator != (T v) const  { return !(value == v);                    }
-            inline bool         operator <  (T v) const  { return value < v;                        }
-            inline bool         operator >  (T v) const  { return value > v;                        }
-            inline bool         operator <= (T v) const  { return !(value > v);                     }
-            inline bool         operator >= (T v) const  { return !(value < v);                     }
+        template<typename X>    	inline Wrapper<T>&  operator &= (X v)        { value &= v; return *this;                }
+        template<typename X>    	inline Wrapper<T>&  operator |= (X v)        { value |= v; return *this;                }
+        template<typename X>    	inline Wrapper<T>&  operator ^= (X v)        { value ^= v; return *this;                }
+        template<typename X>    	inline Wrapper<T>&  operator <<=(X v)        { value <<= v;return *this;                }
+        template<typename X>    	inline Wrapper<T>&  operator >>=(X v)        { value >>= v;return *this;                }
 
-            inline Wrapper<T>   operator +  ()           { return Wrapper<T>(+value);               }
-            inline Wrapper<T>   operator -  ()           { return Wrapper<T>(-value);               }
-            inline Wrapper<T>   operator !  ()           { return Wrapper<T>(!value);               }
-            inline Wrapper<T>   operator ~  ()           { return Wrapper<T>(~value);               }
+                                    inline Wrapper<T>&  operator ++ ()           { ++value;    return *this;                }
+                                    inline Wrapper<T>   operator ++ (int)        { return Wrapper<T>(value++);              }
+                                    inline Wrapper<T>&  operator -- ()           { --value;    return *this;                }
+                                    inline Wrapper<T>   operator -- (int)        { return Wrapper<T>(value--);              }
 
-    friend  inline Wrapper<T>   operator +  (Wrapper<T> w, Wrapper<T> v) { return w += v;           }
-    friend  inline Wrapper<T>   operator +  (T w, Wrapper<T> v)          { return w += v;           }
-    friend  inline Wrapper<T>   operator +  (Wrapper<T> w, T v)          { return w += v;           }
+        template<typename X>    	inline bool         operator == (X v) const  { return value == v;                       }
+        template<typename X>    	inline bool         operator != (X v) const  { return !(value == v);                    }
+        template<typename X>    	inline bool         operator <  (X v) const  { return value < v;                        }
+        template<typename X>    	inline bool         operator >  (X v) const  { return value > v;                        }
+        template<typename X>    	inline bool         operator <= (X v) const  { return !(value > v);                     }
+        template<typename X>    	inline bool         operator >= (X v) const  { return !(value < v);                     }
 
-    friend  inline Wrapper<T>   operator -  (Wrapper<T> w, Wrapper<T> v) { return w -= v;           }
-    friend  inline Wrapper<T>   operator -  (T w, Wrapper<T> v)          { return w -= v;           }
-    friend  inline Wrapper<T>   operator -  (Wrapper<T> w, T v)          { return w -= v;           }
+        template<typename X>    	inline bool         operator && (X v) const  { return value && v;                       }
+        template<typename X>    	inline bool         operator || (X v) const  { return value || v;                       }
 
-    friend  inline Wrapper<T>   operator *  (Wrapper<T> w, Wrapper<T> v) { return w *= v;           }
-    friend  inline Wrapper<T>   operator *  (T w, Wrapper<T> v)          { return w *= v;           }
-    friend  inline Wrapper<T>   operator *  (Wrapper<T> w, T v)          { return w *= v;           }
+                
+        template<typename X>    	inline Wrapper<T>&  operator ,  (X v) const  { return (value, v);                       }
 
-    friend  inline Wrapper<T>   operator /  (Wrapper<T> w, Wrapper<T> v) { return w /= v;           }
-    friend  inline Wrapper<T>   operator /  (T w, Wrapper<T> v)          { return w /= v;           }
-    friend  inline Wrapper<T>   operator /  (Wrapper<T> w, T v)          { return w /= v;           }
+                                    inline Wrapper<T>   operator +  ()           { return Wrapper<T>(+value);               }
+                                    inline Wrapper<T>   operator -  ()           { return Wrapper<T>(-value);               }
+                                    inline Wrapper<T>   operator !  ()           { return Wrapper<T>(!value);               }
+                                    inline Wrapper<T>   operator ~  ()           { return Wrapper<T>(~value);               }
 
-    friend  inline Wrapper<T>   operator %  (Wrapper<T> w, Wrapper<T> v) { return w %= v;           }
-    friend  inline Wrapper<T>   operator %  (T w, Wrapper<T> v)          { return w %= v;           }
-    friend  inline Wrapper<T>   operator %  (Wrapper<T> w, T v)          { return w %= v;           }
+                                    inline auto&        operator *  ()           { return *value;                           }
+                                    inline auto         operator -> ()           { return  value;                           }
 
-    friend  inline Wrapper<T>   operator &  (Wrapper<T> w, Wrapper<T> v) { return w &= v;           }
-    friend  inline Wrapper<T>   operator &  (T w, Wrapper<T> v)          { return w &= v;           }
-    friend  inline Wrapper<T>   operator &  (Wrapper<T> w, T v)          { return w &= v;           }
+                
+        template<typename K>    	inline auto         operator [] (K k)        { return value[k];                         }
+                
+        template<typename K>    	inline auto         operator [] (K k) const  { return value[k];                         }
+                
+        template<typename ...A> 	inline auto         operator () (A... a) const { return value(a...);                    }
 
-    friend  inline Wrapper<T>   operator |  (Wrapper<T> w, Wrapper<T> v) { return w |= v;           }
-    friend  inline Wrapper<T>   operator |  (T w, Wrapper<T> v)          { return w |= v;           }
-    friend  inline Wrapper<T>   operator |  (Wrapper<T> w, T v)          { return w |= v;           }
+        #define OPERATOR(op)\
+        template<typename X> friend inline auto         operator op (Wrapper<T> v, Wrapper<X> t) { return Wrapper<decltype(v.value op t.value)>(v.value op t.value);  }\
+                             friend inline auto         operator op (T t, Wrapper<T> v)          { return Wrapper<decltype(t op v.value)>(t op v.value);        }\
+                             friend inline auto         operator op (Wrapper<T> v,T t)           { return Wrapper<decltype(v.value op t)>(v.value op t);        }
 
-    friend  inline Wrapper<T>   operator ^  (Wrapper<T> w, Wrapper<T> v) { return w ^= v;           }
-    friend  inline Wrapper<T>   operator ^  (T w, Wrapper<T> v)          { return w ^= v;           }
-    friend  inline Wrapper<T>   operator ^  (Wrapper<T> w, T v)          { return w ^= v;           }
+        OPERATOR(+)
+        OPERATOR(-)
+        OPERATOR(*)
+        OPERATOR(/)
+        OPERATOR(%)
+        OPERATOR(&)
+        OPERATOR(|)
+        OPERATOR(^)
+        OPERATOR(<<)
+        OPERATOR(>>)
 
-    friend  inline Wrapper<T>   operator <<  (Wrapper<T> w, Wrapper<T> v) { return w <<= v;           }
-    friend  inline Wrapper<T>   operator <<  (T w, Wrapper<T> v)          { return w <<= v;           }
-    friend  inline Wrapper<T>   operator <<  (Wrapper<T> w, T v)          { return w <<= v;           }
 
-    friend  inline Wrapper<T>   operator >>  (Wrapper<T> w, Wrapper<T> v) { return w >>= v;           }
-    friend  inline Wrapper<T>   operator >>  (T w, Wrapper<T> v)          { return w >>= v;           }
-    friend  inline Wrapper<T>   operator >>  (Wrapper<T> w, T v)          { return w >>= v;           }
+        template<typename X> friend inline auto&         operator >> (X& x, Wrapper<T>& v) { return x >> v.value; }
 
-    // Objects
-    inline Object::TString to_string() const;
-    inline int hash() const;
+        // Objects
+                                    inline Object::TString to_string() const;
+                                    inline int hash() const;
 
-private:
-    T value;
-    static const T default_value;
-};
+    private:
+    public:
+        T value;
+    };
+
+}
 
 #define MAKE_BASIC_TYPE_WRAPPER(name, def_value, type...) \
-typedef Wrapper<type> name;\
+typedef __hide::Wrapper<type> name;\
+namespace __hide {\
 template<>\
-const type name::default_value = def_value;\
+const type Wrapper<type>::default_value = def_value;\
 template<>\
-Object::TString name::to_string() const {\
+Object::TString Wrapper<type>::to_string() const {\
     return std::to_string(value);\
 }\
 template<>\
-int name::hash() const {\
+int __hide::Wrapper<type>::hash() const {\
     return value;\
-}
+}}
 
 MAKE_BASIC_TYPE_WRAPPER(Char, 0, char)
 MAKE_BASIC_TYPE_WRAPPER(UChar, 0, unsigned char)
@@ -138,17 +140,10 @@ MAKE_BASIC_TYPE_WRAPPER(Float, 0, float)
 
 MAKE_BASIC_TYPE_WRAPPER(Double, 0, double)
 MAKE_BASIC_TYPE_WRAPPER(LDouble, 0, long double)
-
+/*
 MAKE_BASIC_TYPE_WRAPPER(Bool, false, bool)
-
+*/
 #undef MAKE_BASIC_TYPE_WRAPPER
-
-template<typename T>
-const T Wrapper<T>::default_value = T();
-template<typename T>
-Object::TString Wrapper<T>::to_string() const { std::ostringstream os; os << value; return os.str(); }
-template<typename T>
-int Wrapper<T>::hash() const { return (int)value; }
 
 END_NAMESPACE_HAZ
 
