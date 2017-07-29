@@ -7,6 +7,7 @@ BEG_NAMESPACE_HAZ
 
 template<typename T>
 class DynamicArray : public Object {
+    HAZ_TEMPLATE_MUST_BE_BASE_OF(Object, T)
 public:
     DynamicArray<T>() : _data(new T[capacity_start]), _size(0), _capacity(capacity_start) {}
 
