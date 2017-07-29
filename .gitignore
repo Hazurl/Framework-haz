@@ -32,5 +32,5 @@
 *.app
 
 # Useless directories
-.vscodes
+.vscode
 build/
