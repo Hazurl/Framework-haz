@@ -1,93 +1,100 @@
-#include <SystemMacro.h>
-#include <System/Object.hpp>
+#include <Macro.h>
+#include <Utility.h>
 
 #include <iostream>
 
 BEG_NAMESPACE_HAZ
 
 template<typename T>
-class DynamicArray : public Object {
-    //HAZ_TEMPLATE_MUST_BE_BASE_OF(Object, T)
+class DynamicArray {
 public:
-    DynamicArray<T>() : _data(new T[capacity_start]), _size(0), _capacity(capacity_start) {}
+    DynamicArray() : 
+        data(new T[capacity_start]), 
+        size(0), 
+        capacity(capacity_start) 
+    {
+    }
+
+    DynamicArray(const DynamicArray& other) : 
+        data(new T[other.capacity]), 
+        size(other.size), 
+        capacity(other.capacity) 
+    {
+        arrayCopy<T>(other.data, data, other.size); 
+    }
 
     ~DynamicArray() {
-        SAFE_DELETE_ARR(_data)
+        SAFE_DELETE_ARR(data)
     }
 
-    DynamicArray(DynamicArray const& other) {
-        SAFE_DELETE_ARR(_data)
-        _data = other._data;
-        _size = other._size;
-        _capacity = other._capacity;
+    DynamicArray(DynamicArray&& other) : 
+        data(other.data), 
+        size(other.size), 
+        capacity(other.capacity) 
+    {
+        other.data = nullptr;
     }
 
-    // Object Implementation
-    Object::TString to_string () const {
-        Object::TString str = "{";
-        for (unsigned long i = 0; i < _size; ++i) {
-            if (i > 0) str += ", ";
-            str += value_to_string(_data[i]);
-        }
-        return str + "}";
-    }
-
-    int hash() const {
-        return 0;
+    inline DynamicArray& operator=(DynamicArray other) {
+        haz::swap(data, other.data);
+        return *this;
     }
 
     T& push(T v) {
-        ++_size;
-        check_resize();
+        if (++size > capacity)
+            resize();
 
-        return _data[_size - 1] = v;
+        return data[size - 1] = v;
     }
 
-    T remove(unsigned long pos) {
-        HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < _size);
+    T pop(unsigned int pos) {
+        HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size && data != nullptr);
 
-        T out = _data[pos];
-        for (unsigned long i = pos + 1; i < _size; ++i) {
-            _data[i - 1] = _data[i];
-        }
-        --_size;
+        T out = data[pos];
+        arrayCopy<int>(data + pos + 1, data + pos, size - pos - 1);
+        --size;
 
         return out;
     }
 
-    unsigned long size () const {
-        return _size;
+    void remove(unsigned int pos) {
+        HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size && data != nullptr);
+        arrayCopy<int>(data + pos + 1, data + pos, size - pos - 1);
+        --size;
     }
 
-    unsigned long capacity () const {
-        return _capacity;
+    T& operator[] (unsigned int pos) {
+        HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size && data != nullptr);
+        return data[pos];
+    }
+
+    inline const T& operator[] (unsigned int pos) const {
+        HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size && data != nullptr);
+        return data[pos];
+    }
+
+    inline unsigned int getSize () const {
+        return size;
+    }
+
+    inline unsigned int getCapacity () const {
+        return capacity;
     }
 
 private:
-    T* _data = nullptr;
-    unsigned long _size;
-    unsigned long _capacity;
-    static const unsigned long capacity_start = 8;
+    T* data = nullptr;
+    unsigned int size;
+    unsigned int capacity;
+    static const unsigned int capacity_start = 8;
 
-    bool check_resize() {
-        if (_size <= _capacity)
-            return false;
+    void resize() {
+        T* newdata = new T[capacity * 2];
+        arrayCopy<int>(data, newdata, capacity);
 
-        T* new_data = new T[_capacity * 2];
-        T* cur = new_data;
-        T* old = _data;
-        for (unsigned long i = 0; i < _capacity; ++i, ++cur, ++old)
-            *cur = *old;
-
-        SAFE_DELETE_ARR(_data)
-        _data = new_data;
-        _capacity *= 2;
-
-        return true;
+        delete[] data;
+        data = newdata;
+        capacity *= 2;
     }
-
-    Object::TString value_to_string (typename std::remove_pointer<T>::type* v) const { return v->to_string(); }
-    Object::TString value_to_string (typename std::remove_pointer<T>::type  v) const { return v.to_string();  }
 };
 
 
