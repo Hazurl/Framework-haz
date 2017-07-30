@@ -7,7 +7,7 @@ BEG_NAMESPACE_HAZ
 
 template<typename T>
 class DynamicArray : public Object {
-    HAZ_TEMPLATE_MUST_BE_BASE_OF(Object, T)
+    //HAZ_TEMPLATE_MUST_BE_BASE_OF(Object, T)
 public:
     DynamicArray<T>() : _data(new T[capacity_start]), _size(0), _capacity(capacity_start) {}
 
@@ -44,7 +44,7 @@ public:
     }
 
     T remove(unsigned long pos) {
-        HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size);
+        HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < _size);
 
         T out = _data[pos];
         for (unsigned long i = pos + 1; i < _size; ++i) {
