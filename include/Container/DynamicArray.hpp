@@ -2,12 +2,23 @@
 #include <Utility.h>
 
 #include <iostream>
+#include <initializer_list>
 
 BEG_NAMESPACE_HAZ
 
 template<typename T>
 class DynamicArray {
 public:
+    typedef             T  Value;
+    typedef       const T  ValueConst;
+    typedef             T& ValueRef;
+    typedef       const T& ValueConstRef;
+    typedef             T* ValuePtr;
+    typedef       const T* ValueConstPtr;
+    
+    typedef      ValuePtr  iterator;
+    typedef ValueConstPtr  iterator_const;
+
     DynamicArray() : 
         data(new T[capacity_start]), 
         size(0), 
@@ -24,7 +35,7 @@ public:
     }
 
     ~DynamicArray() {
-        SAFE_DELETE_ARR(data)
+        delete [] data;
     }
 
     DynamicArray(DynamicArray&& other) : 
@@ -36,23 +47,57 @@ public:
     }
 
     inline DynamicArray& operator=(DynamicArray other) {
-        haz::swap(data, other.data);
+        DynamicArray::swap(*this, other);
         return *this;
     }
 
-    T& push(T v) {
-        if (++size > capacity)
-            resize();
-
-        return data[size - 1] = v;
+    static void swap (DynamicArray& a, DynamicArray& b) {
+        haz::swap(a.size, b.size);
+        haz::swap(a.capacity, b.capacity);
+        haz::swap(a.data, b.data);
     }
 
-    T pop(unsigned int pos) {
+    inline iterator begin() {
+        return data;
+    }
+
+    inline iterator end() {
+        return data + size;
+    }
+    
+    inline iterator_const begin() const {
+        return data;
+    }
+
+    inline iterator_const end() const {
+        return data + size;
+    }
+    
+    void push(const std::initializer_list<T>& list) {
+        if (size + list.size() > capacity)
+            reserve(size + list.size());
+        
+        for (const T& t : list)
+            data[size++] = t;
+    }
+
+    void push(T v) {
+        if (size + 1 > capacity)
+            reserve();
+
+        data[size++] = v;
+    }
+
+    Value pop_back () {
+        HAZ_ASSERT_MSG("Out of bounds !", size > 0)
+        return data[--size];
+    }
+
+    Value pop(unsigned int pos) {
         HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size && data != nullptr);
 
         T out = data[pos];
-        arrayCopy<int>(data + pos + 1, data + pos, size - pos - 1);
-        --size;
+        remove(pos);
 
         return out;
     }
@@ -63,14 +108,53 @@ public:
         --size;
     }
 
-    T& operator[] (unsigned int pos) {
+    void insert(unsigned int pos, T v) {
+        HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size && data != nullptr);
+        if (size + 1 > capacity)
+            reserve();
+        
+        arrayCopyR<int>(data + size - 1, data + size, size - pos);
+        data[pos] = v;
+        ++size;
+    }
+
+    ValueRef operator[] (unsigned int pos) {
         HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size && data != nullptr);
         return data[pos];
     }
 
-    inline const T& operator[] (unsigned int pos) const {
+    inline ValueConstRef operator[] (unsigned int pos) const {
         HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size && data != nullptr);
         return data[pos];
+    }
+
+    void reserve(unsigned int new_cap) {
+        T* new_data = new T[new_cap];
+        arrayCopy<int>(data, new_data, haz::min(capacity, new_cap));
+        
+        delete[] data;
+        data = new_data;
+        capacity = new_cap;
+        size = haz::min(capacity, size);
+    }
+
+    void resize(unsigned int new_size, T value = T()) {
+        if (size < new_size) {
+            if (capacity < new_size)
+                reserve(new_size);
+            for (unsigned int i = size; i < new_size; ++i)
+                data[i] = value;
+        }
+
+        size = new_size;
+    }
+
+    inline void cut() {
+        reserve(size);
+    }
+
+    inline bool isEmpty() const { 
+        return size == 0;
     }
 
     inline unsigned int getSize () const {
@@ -87,13 +171,8 @@ private:
     unsigned int capacity;
     static const unsigned int capacity_start = 8;
 
-    void resize() {
-        T* newdata = new T[capacity * 2];
-        arrayCopy<int>(data, newdata, capacity);
-
-        delete[] data;
-        data = newdata;
-        capacity *= 2;
+    inline void reserve() {
+        reserve(capacity * 2);
     }
 };
 

@@ -24,6 +24,32 @@ void arrayCopy(const T* from, T* to, unsigned int size) {
         *to = *from;
 }
 
+template<typename T>
+void arrayCopyR(const T* from, T* to, unsigned int size) {
+    for(unsigned int _ = 0; _ < size; ++_, --from, --to)
+        *to = *from;
+}
+
+template<typename T>
+inline T& min (T& a, T& b) {
+    return a < b ? a : b;
+}
+
+template<typename T>
+inline const T& min (const T& a, const T& b) {
+    return a < b ? a : b;
+}
+
+template<typename T>
+inline T& max (T& a, T& b) {
+    return a > b ? a : b;
+}
+
+template<typename T>
+inline const T& max (const T& a, const T& b) {
+    return a > b ? a : b;
+}
+
 END_NAMESPACE_HAZ
 
 #endif
