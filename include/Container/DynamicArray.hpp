@@ -1,5 +1,5 @@
-#include <Macro.h>
-#include <Utility.h>
+#include <Macro.hpp>
+#include <Utility.hpp>
 
 #include <iostream>
 #include <initializer_list>
@@ -20,22 +20,24 @@ public:
     typedef ValueConstPtr  iterator_const;
 
     DynamicArray() : 
-        data(new T[capacity_start]), 
+        data(nullptr),
         size(0), 
         capacity(capacity_start) 
     {
     }
 
     DynamicArray(const DynamicArray& other) : 
-        data(new T[other.capacity]), 
+        data(other.size > 0 ? new T[other.capacity] : nullptr), 
         size(other.size), 
-        capacity(other.capacity) 
+        capacity(other.size > 0 ? other.capacity : capacity_start) 
     {
-        arrayCopy<T>(other.data, data, other.size); 
+        if (other.size > 0)
+            arrayCopy<T>(other.data, data, other.size); 
     }
 
     ~DynamicArray() {
-        delete [] data;
+        if (size > 0)
+            delete [] data;
     }
 
     DynamicArray(DynamicArray&& other) : 
@@ -77,6 +79,9 @@ public:
         if (size + list.size() > capacity)
             reserve(size + list.size());
         
+        if (data == nullptr)
+            data = new T[capacity];
+
         for (const T& t : list)
             data[size++] = t;
     }
@@ -84,6 +89,9 @@ public:
     void push(T v) {
         if (size + 1 > capacity)
             reserve();
+
+        if (data == nullptr)
+            data = new T[capacity];
 
         data[size++] = v;
     }
@@ -109,9 +117,12 @@ public:
     }
 
     void insert(unsigned int pos, T v) {
-        HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size && data != nullptr);
+        HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size);
         if (size + 1 > capacity)
             reserve();
+
+        if (data == nullptr)
+            data = new T[capacity];
         
         arrayCopyR<int>(data + size - 1, data + size, size - pos);
         data[pos] = v;
@@ -129,11 +140,12 @@ public:
     }
 
     void reserve(unsigned int new_cap) {
-        T* new_data = new T[new_cap];
-        arrayCopy<int>(data, new_data, haz::min(capacity, new_cap));
-        
-        delete[] data;
-        data = new_data;
+        if (data != nullptr) {
+            T* new_data = new T[new_cap];
+            arrayCopy<int>(data, new_data, haz::min(capacity, new_cap));
+            delete[] data;
+            data = new_data;
+        }
         capacity = new_cap;
         size = haz::min(capacity, size);
     }
@@ -142,6 +154,10 @@ public:
         if (size < new_size) {
             if (capacity < new_size)
                 reserve(new_size);
+
+            if (data == nullptr)
+                data = new T[capacity];
+
             for (unsigned int i = size; i < new_size; ++i)
                 data[i] = value;
         }

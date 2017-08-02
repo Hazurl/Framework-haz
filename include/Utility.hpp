@@ -1,7 +1,7 @@
 #ifndef __UTILITY
 #define __UTILITY
 
-#include <Macro.h>
+#include <Macro.hpp>
 #include <utility>
 
 BEG_NAMESPACE_HAZ
