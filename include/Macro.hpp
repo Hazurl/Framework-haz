@@ -1,5 +1,7 @@
-#ifndef __SYSTEMMACRO
-#define __SYSTEMMACRO
+#ifndef __HAZ_MACRO
+#define __HAZ_MACRO
+
+#include <iostream>
 
 #define BEG_NAMESPACE_HAZ namespace haz {
 #define END_NAMESPACE_HAZ }
@@ -22,5 +24,7 @@
 
 #define CALL_X_TIMES(x) for (int __i__ = x; __i__ > 0; __i__--)
 #define MERGE(a, b) a##b
+#define UNIQUE_NAME_(name, line) MERGE(name, line)
+#define UNIQUE_NAME(name) UNIQUE_NAME_(name, __LINE__)
 
 #endif

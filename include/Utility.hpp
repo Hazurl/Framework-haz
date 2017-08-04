@@ -1,8 +1,10 @@
-#ifndef __UTILITY
-#define __UTILITY
+#ifndef __HAZ_UTILITY
+#define __HAZ_UTILITY
 
 #include <Macro.hpp>
 #include <utility>
+#include <memory>
+#include <cxxabi.h>
 
 BEG_NAMESPACE_HAZ
 
@@ -48,6 +50,18 @@ inline T& max (T& a, T& b) {
 template<typename T>
 inline const T& max (const T& a, const T& b) {
     return a > b ? a : b;
+}
+
+#define TYPE_NAME(x) haz::demangleTypeIdName(typeid(x).name())
+
+inline std::string demangleTypeIdName(const char* name) {
+    int status = -4;
+    char* res = abi::__cxa_demangle(name, NULL, NULL, &status);
+    std::string ret_val(
+        (status == 0) ? res : name
+    );
+    free(res);
+    return ret_val;
 }
 
 END_NAMESPACE_HAZ

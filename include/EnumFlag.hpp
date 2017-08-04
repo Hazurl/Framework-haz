@@ -4,21 +4,19 @@
 #include <Macro.hpp>
 #include <type_traits>
 
-#define MAKE_FLAG_enum_class(name, bloc_enum...)\
-    BEG_NAMESPACE_HAZ_HIDDEN namespace EnumFlag { \
-    enum class name : EnumFlagType \
+#define ENUM_FLAG(name, bloc_enum...)\
+    BEG_NAMESPACE_HAZ_HIDDEN namespace enumFlagNamespace { \
+    enum class UNIQUE_NAME(name) \
         bloc_enum; \
     } END_NAMESPACE_HAZ_HIDDEN \
-    typedef haz::__hide::EnumFlag::name name
+    typedef haz::__hide::enumFlagNamespace::UNIQUE_NAME(name) name
 
 BEG_NAMESPACE_HAZ_HIDDEN
 
-namespace EnumFlag {
+namespace enumFlagNamespace {
 
-#define TEMPLATE_RESTRICTIONS(T) typename = typename std::enable_if<std::is_enum<T>::value, T>::type, typename = typename std::enable_if<std::is_same<std::underlying_type_t<T>, EnumFlagType>::value>::type
-#define CAST_UNDER_TYPE(T) static_cast<std::underlying_type_t<T>>
-
-    typedef int EnumFlagType;
+#define TEMPLATE_RESTRICTIONS(T) typename = typename std::enable_if<std::is_enum<T>::value, T>::type
+#define CAST_UNDER_TYPE(T) static_cast<typename std::underlying_type<T>::type>
 
     template<typename T, TEMPLATE_RESTRICTIONS(T)>
     class auto_bool

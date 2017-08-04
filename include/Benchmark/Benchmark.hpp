@@ -1,5 +1,5 @@
-#ifndef __BENCHMARK
-#define __BENCHMARK
+#ifndef __HAZ_BENCHMARK
+#define __HAZ_BENCHMARK
 
 #define RELEASE_MODE
 

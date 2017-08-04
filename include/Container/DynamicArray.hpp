@@ -1,3 +1,6 @@
+#ifndef __HAZ_DYNAMIC_ARRAY
+#define __HAZ_DYNAMIC_ARRAY
+
 #include <Macro.hpp>
 #include <Utility.hpp>
 
@@ -192,5 +195,6 @@ private:
     }
 };
 
-
 END_NAMESPACE_HAZ
+
+#endif
