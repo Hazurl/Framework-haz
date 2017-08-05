@@ -2,7 +2,7 @@
 #                     SRC                    #
 ##############################################
 # All directories to build (inside src/)
-DIR :=  Benchmark
+DIR :=  Benchmark GameObject Tools
 # Directories with src/ prefix
 SRC_DIR := $(addprefix src/,$(DIR))
 # All .cpp files

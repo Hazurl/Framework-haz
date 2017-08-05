@@ -9,6 +9,9 @@
 #define BEG_NAMESPACE_HAZ_HIDDEN BEG_NAMESPACE_HAZ namespace __hide {
 #define END_NAMESPACE_HAZ_HIDDEN } END_NAMESPACE_HAZ 
 
+#define BEG_NAMESPACE_HAZ_GEOM2 BEG_NAMESPACE_HAZ namespace Geometry2 {
+#define END_NAMESPACE_HAZ_GEOM2 } END_NAMESPACE_HAZ 
+
 #define SAFE_DELETE_ARR(arr) if (arr) { delete [] arr; arr = nullptr; }
 #define SAFE_DELETE(ptr) if (ptr) { delete arr; att = nullptr; }
 

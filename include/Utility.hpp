@@ -33,23 +33,32 @@ void arrayCopyR(const T* from, T* to, unsigned int size) {
 }
 
 template<typename T>
-inline T& min (T& a, T& b) {
-    return a < b ? a : b;
-}
-
-template<typename T>
 inline const T& min (const T& a, const T& b) {
     return a < b ? a : b;
 }
-
 template<typename T>
-inline T& max (T& a, T& b) {
+inline const T& max (const T& a, const T& b) {
     return a > b ? a : b;
 }
 
 template<typename T>
-inline const T& max (const T& a, const T& b) {
-    return a > b ? a : b;
+inline T clamp (const T& x, const T& a, const T& b) {
+    return (x < a ? a : (x > b ? b : x));
+}
+
+template<typename T>
+inline T lerp (double t, const T& a, const T& b) {
+    return a + t * (b - a);
+}
+
+template<typename T>
+inline T lerpClamp (double t, const T& a, const T& b) {
+    return a + clamp<double>(t, 0, 1) * (b - a);
+}
+
+template<typename T>
+inline T abs (T x) {
+    return x < 0 ? -x : x;
 }
 
 #define TYPE_NAME(x) haz::demangleTypeIdName(typeid(x).name())

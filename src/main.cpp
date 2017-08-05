@@ -8,10 +8,17 @@
 int main (int , char ** ) {
     //haz::Benchmark::all();
     using namespace haz;
+    using namespace haz::Geometry2;
+
+    Time time;
 
     GameObject go;
-    //go.addComponent<Transform2D>();
-    go.addComponent<Transform2D>(0, 1);
+    auto* c = go.addComponent<Transform2D>();
+    c->setPosition(Vector<float>::up());
+    c->setScale({0.5, 0.5});
+    c->setRotation(50);
+
+    std::cout << *c << std::endl;
 
     return 0;
 }
