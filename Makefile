@@ -2,7 +2,7 @@
 #                     SRC                    #
 ##############################################
 # All directories to build (inside src/)
-DIR :=  Benchmark GameObject Tools
+DIR :=  Interface Benchmark GameObject Tools Component Component/2D Geometry Geometry/2D
 # Directories with src/ prefix
 SRC_DIR := $(addprefix src/,$(DIR))
 # All .cpp files
@@ -99,3 +99,7 @@ run: $(DEST)
 again:
 	@make clean
 	@make run
+
+# Use cpp_gen
+file:
+	cpp_gen --include --oh=$(dir) --oc=src/$(dir) --define=__HAZ_$(shell echo $(name) | tr a-z A-Z) --class=$(name) --filename=$(name) --hpp $(arg)

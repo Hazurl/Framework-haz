@@ -1,188 +1,91 @@
 #ifndef __HAZ_GAMEOBJECT
 #define __HAZ_GAMEOBJECT
 
-#include <GameObject/Component.hpp>
+#include <Component/Component.hpp>
 #include <Macro.hpp>
 #include <Utility.hpp>
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <EnumFlag.hpp>
+
+ENUM_FLAG_NESTED(BEG_NAMESPACE_HAZ, END_NAMESPACE_HAZ, 
+Layer, {
+    Default         = 1 << 0,
+    Light           = 1 << 1,
+    RayCast         = 1 << 2,
+    UI              = 1 << 3,
+
+    Custom_1        = 1 << 10,
+    Custom_2        = 1 << 11,
+    Custom_3        = 1 << 12,
+    Custom_4        = 1 << 13,
+    Custom_5        = 1 << 14,
+    Custom_6        = 1 << 15,
+    Custom_7        = 1 << 16,
+    Custom_8        = 1 << 17,
+    Custom_9        = 1 << 18,
+
+    All             = ~0
+});
 
 BEG_NAMESPACE_HAZ
 
+#define TEMPLATE_T template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
+#define TEMPLATE_T_As_Args template<typename T, typename As = T, typename ...Args, typename = typename std::enable_if<std::is_base_of<Component, As>::value>::type, typename = typename std::enable_if<std::is_base_of<As, T>::value>::type>
+#define TEMPLATE_T_As template<typename T, typename As = T, typename = typename std::enable_if<std::is_base_of<Component, As>::value>::type, typename = typename std::enable_if<std::is_base_of<As, T>::value>::type>
+
 class GameObject {
 public:
-    GameObject() : components({}) {}
+    GameObject(std::string const& name);
 
-    virtual ~GameObject() {
-        for (auto& p : components) {
-            std::cout << "Delete : " << TYPE_NAME(*p.second) << std::endl;
-            delete p.second;
-        }
-        components.clear();
-    }
+    virtual ~GameObject();
 
-    GameObject(GameObject const& go) {
-        *this = go;
-    }
+    GameObject(GameObject const& go);
 
-    GameObject& operator=(GameObject go) {
-        swap(*this, go);
-        return *this;
-    }
+    GameObject& operator=(GameObject go);
 
-    static void swap(GameObject& a, GameObject& b) {
-        haz::swap(a.components, b.components);
-    }
+    static void swap(GameObject& a, GameObject& b);
 
     /* Component */
-    template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type, typename ...Args>
-    T* addComponent(Args... args) {
-        std::size_t key = typeid(T).hash_code();
-        HAZ_ASSERT_MSG("Component already added !", components.find(key) == components.end());
+    TEMPLATE_T_As_Args T* addComponent(Args... args);
+    TEMPLATE_T_As T* addComponent();
 
-        auto t = new T(args...);
-        t->go = this;
-        components[key] = t;
-        return t;
-    }
+    TEMPLATE_T void removeComponent();
 
-    template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
-    T* addComponent() {
-        std::size_t key = typeid(T).hash_code();
-        HAZ_ASSERT_MSG("Component already added !", components.find(key) == components.end());
+    TEMPLATE_T T* getComponent();
+    TEMPLATE_T const T* getComponent() const;
 
-        auto t = new T();
-        t->go = this;
-        components[key] = t;
-        return t;
-    }
+    std::vector<Component*> getComponents();
+    std::vector<const Component*> getComponents() const;
 
-    template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
-    T* getComponent() {
-        std::size_t key = typeid(T).hash_code();
-        if (components.find(key) == components.end())
-            return nullptr;
-        else 
-            return dynamic_cast<T*>(components[key]);
-    }
+    TEMPLATE_T std::vector<T*> getComponentsInChilds();
+    TEMPLATE_T std::vector<const T*> getComponentsInChilds() const;
 
-    template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
-    const T* getComponent() const {
-        std::size_t key = typeid(T).hash_code();
-        if (components.find(key) == components.end())
-            return nullptr;
-        else 
-            return dynamic_cast<T*>(components.at(key));
-    }
+    TEMPLATE_T T* getComponentInChilds();
+    TEMPLATE_T const T* getComponentInChilds() const;
 
-    template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
-    std::vector<T*> getComponentsInChilds() {
-        std::vector<T*> v = {};
-        T* comp = getComponent<T>();
-        if (comp != nullptr)
-            v.push_back(comp);
-        
-        for (auto* c : childs) {
-            for (auto* cp : c->getComponentsInChilds<T>())
-                v.push_back(cp);
-        }
-        return v;
-    }
+    TEMPLATE_T T* getComponentInParent();
+    TEMPLATE_T const T* getComponentInParent() const;
 
-    template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
-    std::vector<const T*> getComponentsInChilds() const {
-        std::vector<const T*> v = {};
-        const T* comp = getComponent<T>();
-        if (comp != nullptr)
-            v.push_back(comp);
-        
-        for (auto* c : childs) {
-            for (auto* cp : c->getComponentsInChilds<T>())
-                v.push_back(cp);
-        }
-        return v;
-    }
+    void setParent(GameObject* go);
+    void addChild(GameObject* go);
 
-    template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
-    T* getComponentInChilds() {
-        T* comp = getComponent<T>();
-        if (comp != nullptr)
-            return comp;
-        
-        for (auto* c : childs)
-            for (auto* cp : c->getComponentsInChilds<T>())
-                if (cp != nullptr)
-                    return cp;
-        
-        return nullptr;
-    }
+    std::string to_string() const;
+    void setName(std::string const& n);
+    bool compareName(std::string const& n);
 
-    template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
-    const T* getComponentInChilds() const {
-        const T* comp = getComponent<T>();
-        if (comp != nullptr)
-            return comp;
-        
-        for (auto* c : childs)
-            for (auto* cp : c->getComponentsInChilds<T>())
-                if (cp != nullptr)
-                    return cp;
-        
-        return nullptr;
-    }
+    std::string getTag() const;
+    void setTag(std::string const& t);
+    bool compareTag(std::string const& t);
 
-    template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
-    T* getComponentInParent() {
-        T* comp = getComponent<T>();
-        if (comp != nullptr)
-            return comp;
+    bool isActive() const;
+    void setActive(bool b);
 
-        return parent == nullptr ? nullptr : parent->getComponentInParent<T>();
-    }
-
-    template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
-    const T* getComponentInParent() const {
-        const T* comp = getComponent<T>();
-        if (comp != nullptr)
-            return comp;
-
-        return parent == nullptr ? nullptr : parent->getComponentInParent<T>();
-    }
-
-    void setParent(GameObject* go) {
-        if (parent != nullptr) {
-            auto it = std::find(parent->childs.begin(), parent->childs.end(), this);
-            if (it != parent->childs.end())
-                parent->childs.erase(it);
-        }
-
-        if (go != nullptr)
-            go->childs.push_back(this);
-        parent = go;
-    }
-
-
-    void addChild(GameObject* go) {
-        if (go != nullptr)
-            go->setParent(this);
-    }
-
-    std::string to_string() const {
-        return name;
-    }
-
-    void setName(std::string const& n) {
-        name = n;
-    }
-
-    std::string getTag() const {
-        return tag;
-    }
-
-    void setTag(std::string const& t) {
-        tag = t;
-    }
+    bool isOnLayer(Layer l) const;
+    void setOnLayer(Layer l);
+    void removefromLayer(Layer l);
+    Layer getLayers() const;
 
 protected:
 
@@ -194,7 +97,24 @@ private:
 
     std::string name;
     std::string tag;
+
+    bool is_active = true;
+    Layer layers = Layer::Default | Layer::RayCast;
 };
+
+#undef TEMPLATE_T
+#undef TEMPLATE_T_As
+#undef TEMPLATE_T_As_Args
+
+#define TEMPLATE_T template<typename T, typename>
+#define TEMPLATE_T_As template<typename T, typename As, typename , typename>
+#define TEMPLATE_T_As_Args template<typename T, typename As, typename ...Args, typename , typename>
+
+#include <GameObject/GameObject.tcc>
+
+#undef TEMPLATE_T
+#undef TEMPLATE_T_As
+#undef TEMPLATE_T_As_Args
 
 END_NAMESPACE_HAZ
 

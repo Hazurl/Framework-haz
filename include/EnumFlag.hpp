@@ -11,6 +11,13 @@
     } END_NAMESPACE_HAZ_HIDDEN \
     typedef haz::__hide::enumFlagNamespace::UNIQUE_NAME(name) name
 
+#define ENUM_FLAG_NESTED(beg_ns, end_ns, name, bloc_enum...)\
+    BEG_NAMESPACE_HAZ_HIDDEN namespace enumFlagNamespace { \
+    enum class UNIQUE_NAME(name) \
+        bloc_enum; \
+    } END_NAMESPACE_HAZ_HIDDEN \
+    beg_ns typedef haz::__hide::enumFlagNamespace::UNIQUE_NAME(name) name; end_ns
+
 BEG_NAMESPACE_HAZ_HIDDEN
 
 namespace enumFlagNamespace {
@@ -25,7 +32,7 @@ namespace enumFlagNamespace {
     public:
         constexpr auto_bool(T value) : value(value) {}
         constexpr operator T() const { return value; }
-        constexpr explicit operator bool() const
+        constexpr operator bool() const
         {
             return CAST_UNDER_TYPE(T)(value) != 0;
         }

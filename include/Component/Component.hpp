@@ -8,23 +8,22 @@
 BEG_NAMESPACE_HAZ
 
 class GameObject;
+class Environement;
 
 class Component {
 public:
+    Component(GameObject* go);
     virtual ~Component() {};
 
     GameObject* getGO ();
     const GameObject* getGO () const;
 
-    void update(Time const& t);
-    
+    void update(Time const& t, Environement* e);
 
 protected:
 
 private:
-    friend class GameObject;
-    GameObject* go = nullptr;
-
+    GameObject* go;
 };
 
 END_NAMESPACE_HAZ

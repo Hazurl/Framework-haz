@@ -61,6 +61,26 @@ inline T abs (T x) {
     return x < 0 ? -x : x;
 }
 
+template<typename T>
+inline bool between_ii(const T& x, const T& a, const T& b) {
+    return x >= a && x <= b;
+}
+
+template<typename T>
+inline bool between_xi(const T& x, const T& a, const T& b) {
+    return x > a && x <= b;
+}
+
+template<typename T>
+inline bool between_ix(const T& x, const T& a, const T& b) {
+    return x >= a && x < b;
+}
+
+template<typename T>
+inline bool between_xx(const T& x, const T& a, const T& b) {
+    return x > a && x < b;
+}
+
 #define TYPE_NAME(x) haz::demangleTypeIdName(typeid(x).name())
 
 inline std::string demangleTypeIdName(const char* name) {

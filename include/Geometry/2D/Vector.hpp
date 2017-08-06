@@ -1,5 +1,5 @@
-#ifndef __HAZ_GEOM2_VECTOR
-#define __HAZ_GEOM2_VECTOR
+#ifndef __HAZ_2D_VECTOR
+#define __HAZ_2D_VECTOR
 
 #include <Macro.hpp>
 #include <cmath>
@@ -20,10 +20,10 @@ public:
     Vector() : Coords<T>() {}
     Vector(T x, T y) : Coords<T>(x, y) {}
 
-    static Vector<T> up()      { static_assert(!std::is_unsigned<T>::value, "Must be unsigned"); return {0, 1};  }
-    static Vector<T> down()    { static_assert(!std::is_unsigned<T>::value, "Must be unsigned"); return {0, -1}; }
-    static Vector<T> left()    { static_assert(!std::is_unsigned<T>::value, "Must be unsigned"); return {-1, 0}; }
-    static Vector<T> right()   { static_assert(!std::is_unsigned<T>::value, "Must be unsigned"); return {1, 0};  }
+    static Vector<T> up()      { return {0, 1};  }
+    static Vector<T> down()    { return {0, -1}; }
+    static Vector<T> left()    { return {-1, 0}; }
+    static Vector<T> right()   { return {1, 0};  }
 
     ~Vector() {}
 
@@ -32,11 +32,11 @@ public:
     inline void setX(T _x) { this->x = _x; }
     inline void setY(T _y) { this->y = _y; }
 
-    inline double magnitude2() const {
+    inline auto magnitude2() const {
         return this->x * this->x + this->y * this->y;
     }
 
-    inline double magnitude() const {
+    inline auto magnitude() const {
         return std::sqrt(magnitude2());
     }
 
@@ -111,6 +111,9 @@ public:
     }
 
 };
+
+typedef Vector<float> Vectorf;
+typedef Vector<int> Vectori;
 
 END_NAMESPACE_HAZ_GEOM2
 
