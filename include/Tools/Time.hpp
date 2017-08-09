@@ -2,7 +2,7 @@
 #define __HAZ_TIME
 
 #include <chrono>
-#include <Macro.hpp>
+#include <Tools/Macro.hpp>
 
 BEG_NAMESPACE_HAZ
 

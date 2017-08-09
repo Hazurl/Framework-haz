@@ -1,4 +1,4 @@
-#include <Tools/Environement.hpp>
+#include <GameObject/Environement.hpp>
 
 BEG_NAMESPACE_HAZ
 
@@ -12,8 +12,10 @@ Environement::~Environement() {
     gos.clear();
 }
 
-void Environement::addGameObject(GameObject* go) {
-    gos.push_back(go);
+GameObject* Environement::addGameObject(GameObject* go) {
+    if (go != nullptr)
+        gos.push_back(go);
+    return go;
 }
 
 

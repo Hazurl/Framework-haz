@@ -1,4 +1,4 @@
-#include <Component/Component.hpp>
+#include <GameObject/Component/Component.hpp>
 
 BEG_NAMESPACE_HAZ
 

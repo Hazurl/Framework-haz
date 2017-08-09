@@ -1,11 +1,11 @@
 #ifndef __HAZ_ENVIRONEMENT
 #define __HAZ_ENVIRONEMENT
 
-#include <Macro.hpp>
+#include <Tools/Macro.hpp>
 #include <GameObject/GameObject.hpp>
 #include <vector>
 #include <Geometry/2D/Vector.hpp>
-#include <Component/2D/Collider.hpp>
+#include <GameObject/Component/2D/Collider.hpp>
 
 BEG_NAMESPACE_HAZ
 
@@ -16,7 +16,7 @@ public:
 	Environement();
 	virtual ~Environement();
 
-	void addGameObject(GameObject* go);
+	GameObject* addGameObject(GameObject* go);
 
 	/* Find */
 
@@ -48,7 +48,7 @@ private:
 #undef TEMPLATE_T
 #define TEMPLATE_T template<typename T, typename>
 
-#include <Tools/Environement.tcc>
+#include <GameObject/Environement.tcc>
 
 #undef TEMPLATE_T
 

@@ -5,15 +5,20 @@ BEG_NAMESPACE_HAZ
 GameObject::GameObject(std::string const& name) : components({}), name(name) {}
 
 GameObject::~GameObject() {
-    for (auto& p : components) {
-        std::cout << "Delete : " << TYPE_NAME(*p.second) << std::endl;
+    for (auto& p : components)
         delete p.second;
-    }
+
     components.clear();
 }
 
-GameObject::GameObject(GameObject const& go) {
-    *this = go;
+GameObject::GameObject(GameObject const& o) : parent(o.parent), name(o.name), tag(o.tag), is_active(o.is_active), layers(o.layers) {
+    // Components
+    for (auto& p : o.components)
+        components[p.first] = p.second->clone(this);
+
+    // Childs
+    for (auto* child : o.childs) 
+        childs.push_back(new GameObject(*child));
 }
 
 GameObject& GameObject::operator=(GameObject go) {
@@ -89,19 +94,27 @@ void GameObject::setActive(bool b) {
     is_active = b;
 }
 
-bool GameObject::isOnLayer(Layer l) const {
+bool GameObject::isOnAnyLayer(Layers l) const {
     return layers & l;
 }
 
-void GameObject::setOnLayer(Layer l) {
+bool GameObject::isOnAllLayers(Layers l) const {
+    return (l & layers) == l;
+}
+
+void GameObject::AddLayer(Layers l) {
     layers |= l;
 }
 
-void GameObject::removefromLayer(Layer l) {
+void GameObject::setLayers(Layers l) {
+    layers = l;
+}
+
+void GameObject::removeLayers(Layers l) {
     layers &= ~l;
 }
 
-Layer GameObject::getLayers() const {
+Layers GameObject::getLayers() const {
     return layers;
 }
 

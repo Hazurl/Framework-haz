@@ -53,8 +53,9 @@ TEMPLATE_T
 std::vector<T*> GameObject::getComponentsInChilds() {
     std::vector<T*> v = {};
     T* comp = getComponent<T>();
-    if (comp != nullptr)
+    if (comp != nullptr) {
         v.push_back(comp);
+    }
     
     for (auto* c : childs) {
         for (auto* cp : c->getComponentsInChilds<T>())

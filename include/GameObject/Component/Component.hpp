@@ -1,8 +1,8 @@
 #ifndef __HAZ_COMPONENT
 #define __HAZ_COMPONENT
 
-#include <Macro.hpp>
-#include <Utility.hpp>
+#include <Tools/Macro.hpp>
+#include <Tools/Utility.hpp>
 #include <Tools/Time.hpp>
 
 BEG_NAMESPACE_HAZ
@@ -14,6 +14,7 @@ class Component {
 public:
     Component(GameObject* go);
     virtual ~Component() {};
+    virtual Component* clone(GameObject* go) const = 0;
 
     GameObject* getGO ();
     const GameObject* getGO () const;

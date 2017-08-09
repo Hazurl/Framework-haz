@@ -1,8 +1,8 @@
 #ifndef __HAZ_DYNAMIC_ARRAY
 #define __HAZ_DYNAMIC_ARRAY
 
-#include <Macro.hpp>
-#include <Utility.hpp>
+#include <Tools/Macro.hpp>
+#include <Tools/Utility.hpp>
 
 #include <iostream>
 #include <initializer_list>

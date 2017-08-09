@@ -1,7 +1,7 @@
 #ifndef __HAZ_2D_VECTOR
 #define __HAZ_2D_VECTOR
 
-#include <Macro.hpp>
+#include <Tools/Macro.hpp>
 #include <cmath>
 
 BEG_NAMESPACE_HAZ_GEOM2
@@ -24,6 +24,16 @@ public:
     static Vector<T> down()    { return {0, -1}; }
     static Vector<T> left()    { return {-1, 0}; }
     static Vector<T> right()   { return {1, 0};  }
+    static Vector<T> zero()    { return {0, 0};  }
+    static Vector<T> one()     { return {1, 1};  }
+
+    static Vector<T> polar(T x, T y) {
+        return { std::atan2(y, x), std::sqrt(x * x + y * y) };
+    }
+
+    static Vector<T> carthesian(float radius, float angle) {
+        return { radius * cos(angle), radius * sin(angle) };
+    }
 
     ~Vector() {}
 
@@ -31,6 +41,8 @@ public:
     inline T getY() const { return this->y; }
     inline void setX(T _x) { this->x = _x; }
     inline void setY(T _y) { this->y = _y; }
+    inline void set(T x, T y) { this->x = x; this->y = y; }
+    inline void set(Vector<T> const& o) { this->x = o.x; this->y = o.y; }
 
     inline auto magnitude2() const {
         return this->x * this->x + this->y * this->y;
@@ -49,7 +61,7 @@ public:
         return { haz::abs(this->x), haz::abs(this->y) };
     }
 
-    Vector<T> clamp(Vector<T> const& a, Vector<T> const& b) {
+    Vector<T> clamp(Vector<T> const& a, Vector<T> const& b) const {
         return { haz::clamp<T>(this->x, a.x, b.x), haz::clamp<T>(this->y, a.y, b.y) };
     }
 
@@ -69,11 +81,49 @@ public:
         return { haz::max<T>(a.x, b.x), haz::max<T>(a.y, b.y) };
     }
 
-    T dot(Vector<T> const& a) const {
+    inline Vector<T> reverse() const {
+        return -(*this);
+    }
+
+    inline Vector<T> orthogonal() const {
+        return { -this->y, this->x };
+    }
+
+    inline Vector<T> orthogonal2() const {
+        return { this->y, -this->x };
+    }
+
+    inline Vector<T> normal(T n) const {
+        return (*this) * (n / magnitude());
+    }
+
+    inline Vector<T> rotate(float radian) const {
+        auto c = cos(radian);
+        auto s = sin(radian);
+        return { this->x * c - this->y * s, this->x * s + this->y * c };
+    }
+
+    inline T dot(Vector<T> const& a) const {
         return a.x * this->x + a.y * this->y;
     }
 
-    T operator [] (unsigned int pos) {
+    inline T cross(Vector<T> const& v) const {
+        return (this->x * v.y) - (this->y * v.x);
+    }
+
+    inline float angle(const Vector<T> &v) const {
+        return acosf(dot(v) / (magnitude() * v.magnitude()));
+    }
+
+    Vector<T> projected(Vector<T> const& v) const {
+        return v * (dot(v) / v.dot(v));
+    }
+
+    Vector<T> reflect(Vector<T> const& n) const {
+        return projected(n) * 2 - *this;
+    }
+
+    inline T operator [] (unsigned int pos) const {
         HAZ_ASSERT(pos == 0 || pos == 1);
         return pos == 0 ? this->x : this->y;
     }
@@ -83,6 +133,7 @@ public:
     Vector<T>& operator *= (T f) { this->x *= f; this->y *= f; return *this; }
     Vector<T>& operator /= (T f) { this->x /= f; this->y /= f; return *this; }
     Vector<T>& operator %= (T f) { this->x %= f; this->y %= f; return *this; }
+    Vector<T>& operator  = (Vector<T> const& o) { this->x = o.x; this->y = o.y; return *this; }
     bool operator == (Vector<T> const& v) const { return this->x == v.x && this->y == v.y; } 
     bool operator != (Vector<T> const& v) const { return !(*this == v); } 
     bool operator <  (Vector<T> const& v) const { return magnitude2() < v.magnitude2(); } 

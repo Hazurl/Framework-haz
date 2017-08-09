@@ -1,7 +1,7 @@
 #ifndef __HAZ_UTILITY
 #define __HAZ_UTILITY
 
-#include <Macro.hpp>
+#include <Tools/Macro.hpp>
 #include <utility>
 #include <memory>
 #include <cxxabi.h>

@@ -1,4 +1,4 @@
-#include <Component/2D/Collider.hpp>
+#include <GameObject/Component/2D/Collider.hpp>
 
 BEG_NAMESPACE_HAZ_GEOM2
 

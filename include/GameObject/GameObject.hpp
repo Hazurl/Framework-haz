@@ -1,16 +1,16 @@
 #ifndef __HAZ_GAMEOBJECT
 #define __HAZ_GAMEOBJECT
 
-#include <Component/Component.hpp>
-#include <Macro.hpp>
-#include <Utility.hpp>
+#include <GameObject/Component/Component.hpp>
+#include <Tools/Macro.hpp>
+#include <Tools/Utility.hpp>
 #include <map>
 #include <vector>
 #include <algorithm>
-#include <EnumFlag.hpp>
+#include <Tools/EnumFlag.hpp>
 
 ENUM_FLAG_NESTED(BEG_NAMESPACE_HAZ, END_NAMESPACE_HAZ, 
-Layer, {
+Layers, {
     Default         = 1 << 0,
     Light           = 1 << 1,
     RayCast         = 1 << 2,
@@ -82,10 +82,12 @@ public:
     bool isActive() const;
     void setActive(bool b);
 
-    bool isOnLayer(Layer l) const;
-    void setOnLayer(Layer l);
-    void removefromLayer(Layer l);
-    Layer getLayers() const;
+    bool isOnAnyLayer(Layers l) const;
+    bool isOnAllLayers(Layers l) const;
+    void AddLayer(Layers l);
+    void setLayers(Layers l);
+    void removeLayers(Layers l);
+    Layers getLayers() const;
 
 protected:
 
@@ -96,10 +98,10 @@ private:
     std::vector<GameObject*> childs = {};
 
     std::string name;
-    std::string tag;
+    std::string tag = "";
 
     bool is_active = true;
-    Layer layers = Layer::Default | Layer::RayCast;
+    Layers layers = Layers::Default | Layers::RayCast;
 };
 
 #undef TEMPLATE_T

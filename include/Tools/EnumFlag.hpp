@@ -1,7 +1,7 @@
 #ifndef __HAZ_ENUM_FLAG
 #define __HAZ_ENUM_FLAG
 
-#include <Macro.hpp>
+#include <Tools/Macro.hpp>
 #include <type_traits>
 
 #define ENUM_FLAG(name, bloc_enum...)\

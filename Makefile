@@ -2,7 +2,7 @@
 #                     SRC                    #
 ##############################################
 # All directories to build (inside src/)
-DIR :=  Interface Benchmark GameObject Tools Component Component/2D Geometry Geometry/2D
+DIR := Interface Benchmark Tools GameObject GameObject/2D GameObject/Component GameObject/Component/2D Geometry Geometry/2D
 # Directories with src/ prefix
 SRC_DIR := $(addprefix src/,$(DIR))
 # All .cpp files
@@ -13,8 +13,9 @@ SRC := $(foreach d,$(SRC_DIR),$(wildcard $(d)/*.cpp))
 ##############################################
 # Main directories
 MAIN_DIR := src/
-# Main file
-MAIN := main.cpp
+# Main file 
+# Pick one : main_go.cpp, main_benchmark.cpp
+MAIN := main_go.cpp
 # Main path
 MAIN_PATH := $(MAIN_DIR)/$(MAIN)
 # Main .o
