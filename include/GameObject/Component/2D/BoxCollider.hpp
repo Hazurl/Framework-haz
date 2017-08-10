@@ -4,7 +4,7 @@
 #include <GameObject//Component/2D/Collider.hpp>
 #include <Tools/Macro.hpp>
 
-BEG_NAMESPACE_HAZ_GEOM2
+BEG_NAMESPACE_HAZ_2D
 
 class BoxCollider : public Collider {
 public:
@@ -29,6 +29,6 @@ public:
 	float x, y, width, height;
 };
 
-END_NAMESPACE_HAZ_GEOM2
+END_NAMESPACE_HAZ_2D
 
 #endif

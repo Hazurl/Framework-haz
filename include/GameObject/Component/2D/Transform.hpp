@@ -6,9 +6,7 @@
 #include <Tools/Utility.hpp>
 #include <Geometry/2D/Vector.hpp>
 
-BEG_NAMESPACE_HAZ_GEOM2
-
-using namespace Geometry2;
+BEG_NAMESPACE_HAZ_2D
 
 class Transform : public Component {
 public:
@@ -25,6 +23,6 @@ public:
     float rotation;
 };
 
-END_NAMESPACE_HAZ_GEOM2
+END_NAMESPACE_HAZ_2D
 
 #endif

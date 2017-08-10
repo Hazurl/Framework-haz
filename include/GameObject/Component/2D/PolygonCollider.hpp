@@ -7,7 +7,7 @@
 #include <vector>
 #include <Geometry/2D/Vector.hpp>
 
-BEG_NAMESPACE_HAZ_GEOM2
+BEG_NAMESPACE_HAZ_2D
 
 class PolygonCollider : public Collider {
 public:
@@ -24,6 +24,6 @@ private:
 	std::vector<Vectorf> points;
 };
 
-END_NAMESPACE_HAZ_GEOM2
+END_NAMESPACE_HAZ_2D
 
 #endif

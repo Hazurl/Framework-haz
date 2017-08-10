@@ -4,7 +4,7 @@
 #include <Tools/Macro.hpp>
 #include <cmath>
 
-BEG_NAMESPACE_HAZ_GEOM2
+BEG_NAMESPACE_HAZ_2D
 
 template<typename T>
 struct Coords {
@@ -166,6 +166,6 @@ public:
 typedef Vector<float> Vectorf;
 typedef Vector<int> Vectori;
 
-END_NAMESPACE_HAZ_GEOM2
+END_NAMESPACE_HAZ_2D
 
 #endif

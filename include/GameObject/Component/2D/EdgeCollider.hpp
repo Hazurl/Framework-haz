@@ -7,7 +7,7 @@
 #include <vector>
 #include <Geometry/2D/Vector.hpp>
 
-BEG_NAMESPACE_HAZ_GEOM2
+BEG_NAMESPACE_HAZ_2D
 
 class EdgeCollider : public Collider {
 public:
@@ -20,6 +20,6 @@ public:
 	float radius;
 };
 
-END_NAMESPACE_HAZ_GEOM2
+END_NAMESPACE_HAZ_2D
 
 #endif

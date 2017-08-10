@@ -1,6 +1,6 @@
 #include <GameObject/Component/2D/PolygonCollider.hpp>
 
-BEG_NAMESPACE_HAZ_GEOM2
+BEG_NAMESPACE_HAZ_2D
 
 PolygonCollider::~PolygonCollider() {
 	
@@ -23,4 +23,4 @@ void PolygonCollider::setPath(std::vector<Vectorf> const& points) {
     this->points = points;
 }
 
-END_NAMESPACE_HAZ_GEOM2
+END_NAMESPACE_HAZ_2D

@@ -14,55 +14,44 @@
 #include <Interface/Factory.hpp>
 
 int main (int , char ** ) {
-    using namespace haz;
-    using namespace haz::Geometry2;
-    using namespace haz::Geometry2::Collision;
+    USING_NS_HAZ
+    USING_NS_HAZ_HIDDEN
+    USING_NS_HAZ_2D
+    USING_NS_HAZ_COLLISION
 
     typedef Factory<GameObject> go_fact;
-/*
+
     auto* _A = new GameObject("A");
-    _A->addComponent<BoxCollider>(5, 5, 1, 1);
+    _A->addComponent<BoxCollider>(5, 5, 100, 100);
 
     go_fact::registerObject("A", _A);
 
     auto* g = go_fact::createObject("A");
-    std::cout << g->getComponents().size() << std::endl;
+    WRITE(g->getComponents().size());
 
-    std::cout << g->to_string() << " -> " << g->getComponent<BoxCollider>()->position() << std::endl;
+    WRITE(g->to_string() << " -> " << g->getComponent<BoxCollider>()->position());
 
     Time time;
 
     Environement e;
-    e.addGameObject(new GameObject("base"))->addComponent<BoxCollider>(-1, -1, 10, 8);
+    e.addGameObject(new GameObject("base"))->addComponent<BoxCollider>(0, 0, 10, 8);
     e.addGameObject(new GameObject("a"))->addComponent<CircleCollider>(1, 0, 5);
-    e.addGameObject(new GameObject("b"))->addComponent<BoxCollider>(0, 5, 4.5, 4.5);
+    e.addGameObject(new GameObject("b"))->addComponent<BoxCollider>(-1, -1, 0.9, 0.9);
 
-    std::array<GameObject*, 5> gos;
+    std::array<GameObject*, 1> gos;
     int count = Physic::raycast(&e, Vectorf{0, 0}, gos);
 
     if (count > 0) {
-        for (GameObject* go : gos)
+        for (GameObject* go : gos) {
             if (--count >= 0)
-                std::cout << "Hit : " << go->to_string() << std::endl;
+                WRITE("Hit : " << go->to_string());
+            else
+                break;
+        }
     }
-*/
 
-    PolygonCollider p(nullptr, {
-        {0, 0}, {1, 0}, {1, 1}, {0, 1}
-    });
-    
-    std::cout << Vectorf{2, 0.5} << " : " << Collision::point_in_polygon(p, {2, 0.5}) << std::endl;
-    std::cout << Vectorf{0, 0} << " : " << Collision::point_in_polygon(p, {0, 0}) << std::endl;
-    std::cout << Vectorf{0, 1} << " : " << Collision::point_in_polygon(p, {0, 1}) << std::endl;
-    std::cout << Vectorf{1, 0} << " : " << Collision::point_in_polygon(p, {1, 0}) << std::endl;
-    std::cout << Vectorf{1, 1} << " : " << Collision::point_in_polygon(p, {1, 1}) << std::endl;
-    std::cout << Vectorf{-1, 0.5} << " : " << Collision::point_in_polygon(p, {-1, 0.5}) << std::endl;
-    std::cout << Vectorf{-2, 0.5} << " : " << Collision::point_in_polygon(p, {-2, 0.5}) << std::endl;
-    std::cout << Vectorf{0.5, -1} << " : " << Collision::point_in_polygon(p, {0.5, -1}) << std::endl;
-    std::cout << Vectorf{0.5, 0.5} << " : " << Collision::point_in_polygon(p, {0.5, 0.5}) << std::endl;
-    std::cout << Vectorf{0, 0.5} << " : " << Collision::point_in_polygon(p, {0, 0.5}) << std::endl;
-    std::cout << Vectorf{0.5, 0} << " : " << Collision::point_in_polygon(p, {0.5, 0}) << std::endl;
-    
+    for (GameObject* go : Physic::raycast_all(&e, Vectorf{0, 0}))
+        WRITE("Hit : " << go->to_string());
 
     return 0;
 }

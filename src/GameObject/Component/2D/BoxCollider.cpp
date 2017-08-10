@@ -1,6 +1,6 @@
 #include <GameObject/Component/2D/BoxCollider.hpp>
 
-BEG_NAMESPACE_HAZ_GEOM2
+BEG_NAMESPACE_HAZ_2D
 
 BoxCollider::BoxCollider(GameObject* go) : Collider(go) {
 	
@@ -62,4 +62,4 @@ bool BoxCollider::colliding(Vectorf const& p) const {
         && haz::between_ii(p.getY(), top(), bottom());
 }
 */
-END_NAMESPACE_HAZ_GEOM2
+END_NAMESPACE_HAZ_2D

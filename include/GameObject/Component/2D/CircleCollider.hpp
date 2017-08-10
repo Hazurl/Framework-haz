@@ -5,7 +5,7 @@
 #include <Tools/Utility.hpp>
 #include <Tools/Macro.hpp>
 
-BEG_NAMESPACE_HAZ_GEOM2
+BEG_NAMESPACE_HAZ_2D
 
 class CircleCollider : public Collider {
 public:
@@ -22,6 +22,6 @@ public:
 	float x, y, radius;
 };
 
-END_NAMESPACE_HAZ_GEOM2
+END_NAMESPACE_HAZ_2D
 
 #endif

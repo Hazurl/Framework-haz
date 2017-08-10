@@ -1,6 +1,6 @@
 #include <GameObject/Component/2D/CircleCollider.hpp>
 
-BEG_NAMESPACE_HAZ_GEOM2
+BEG_NAMESPACE_HAZ_2D
 
 CircleCollider::CircleCollider(GameObject* go) : Collider(go) {
 	
@@ -54,4 +54,4 @@ bool CircleCollider::colliding(Vectorf const& p) const {
     return (position() - p).magnitude2() <= radius * radius;
 }
 */
-END_NAMESPACE_HAZ_GEOM2
+END_NAMESPACE_HAZ_2D

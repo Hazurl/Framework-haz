@@ -1,8 +1,6 @@
 #include <GameObject/2D/Physic.hpp>
 
-BEG_NAMESPACE_HAZ_GEOM2
-
-namespace Collision {
+BEG_NAMESPACE_HAZ_COLLISION
 
 bool point_in_box(BoxCollider const& b, Vectorf const& point) {
     return haz::between_ii(point.getX(), b.left(), b.right()) 
@@ -14,28 +12,36 @@ bool point_in_circle(CircleCollider const& c, Vectorf const& point) {
 }
 
 bool point_in_polygon(PolygonCollider const& p, Vectorf const& point) {
-    auto points = p.getPath();
-    auto last = points[points.size() - 1];
+    const auto points = p.getPath();
 
     bool res = false;
-    for (unsigned int pos = 0; pos < points.size(); ++pos) {
+    for (unsigned int pos = 0, prev = points.size() - 1; pos < points.size(); prev = pos++) {
         auto cur = points[pos];
+        auto last = points[prev];
 
-        if ((cur.getY() <= point.getY()) && (last.getY() >= point.getY()) || (last.getY() <= point.getY()) && (cur.getY() >= point.getY())) {
+        if (((cur.getY() <= point.getY()) && (last.getY() >= point.getY())) || ((last.getY() <= point.getY()) && (cur.getY() >= point.getY()))) {
             auto deno = last.getY() - cur.getY();
             if (deno == 0) {
-                if ((cur.getX() <= point.getX()) && (last.getX() >= point.getX()) || (last.getX() <= point.getX()) && (cur.getX() >= point.getX()))
-                    res = !res;
+                return (((cur.getX() <= point.getX()) && (last.getX() >= point.getX())) || ((last.getX() <= point.getX()) && (cur.getX() >= point.getX())));
             } else {
                 auto cross = (last.getX() - cur.getX()) * (point.getY() - cur.getY()) / deno + cur.getX();
-                std::cout << cross << std::endl;
 
-                if (cross <= point.getX())
-                    res = !res;
+                if (cross == point.getX())
+                    return true;
+
+                if (cross <= point.getX()) {
+                    if (cross == cur.getX() && point.getY() == cur.getY()) {
+                        if (cur.getY() > last.getY())
+                            res = !res;
+                    } else if(cross == last.getX() && point.getY() == last.getY()) {
+                        if (cur.getY() < last.getY())
+                            res = !res;
+                    } else {
+                        res = !res;
+                    }
+                }
             }
         }
-
-        last = cur;
     }
 
     return res;
@@ -99,6 +105,87 @@ bool edge_intersection(Vectorf& result, Vectorf const& a, Vectorf const& b, Vect
     }
 }
 
+END_NAMESPACE_HAZ_COLLISION
+
+BEG_NAMESPACE_HAZ_HIDDEN
+
+void _test_Collision_Polygon () {
+
+    USING_NS_HAZ_2D
+    USING_NS_HAZ_COLLISION
+
+#define TEST_SQUARE(n, v...) WRITE(n " >>> " << (Vectorf v) << " : " << Collision::point_in_polygon(p, (Vectorf v)) << std::endl);
+
+    PolygonCollider p(nullptr, {
+        {25, 25}, {75, 25}, {75, 75}, {25, 75}
+    });
+
+    WRITE("   Y ^                           ");
+    WRITE("     |                           ");
+    WRITE(" 100 |          Y                ");
+    WRITE("     |                           ");
+    WRITE("  75 |     D----CD---C           ");
+    WRITE("     |     |         |           ");
+    WRITE("  50 |Z    DA   O    BC   X      ");
+    WRITE("     |     |         |           ");
+    WRITE("  25 |     A----AB---B           ");
+    WRITE("     |                           ");
+    WRITE("   0 |          W                ");
+    WRITE("     -------------------------> X");
+    WRITE("     0     25   50   75  100     " << std::endl);
+
+    TEST_SQUARE("A (true)", {25, 25})
+    TEST_SQUARE("B (true)", {75, 25})
+    TEST_SQUARE("C (true)", {75, 75})
+    TEST_SQUARE("D (true)", {75, 25})
+
+    TEST_SQUARE("AB (true)", {50, 25})
+    TEST_SQUARE("BC (true)", {75, 50})
+    TEST_SQUARE("CD (true)", {50, 75})
+    TEST_SQUARE("DA (true)", {25, 50})
+
+    TEST_SQUARE("O (true)", {50, 50})
+
+    TEST_SQUARE("W (false)", {50, 0})
+    TEST_SQUARE("X (false)", {100, 50})
+    TEST_SQUARE("Y (false)", {50, 100})
+    TEST_SQUARE("Z (false)", {0, 50})
+
+    p.setPath({
+        {50, 0}, {100, 50}, {50, 100}, {0, 50}
+    });
+    std::cout << std::endl;
+
+    WRITE("   Y ^                       ");
+    WRITE("     |                       ");
+    WRITE(" 100 |Z        D        Y    ");
+    WRITE("     |      /    \\           ");
+    WRITE("  75 |    DA       CD        ");
+    WRITE("     |  /             \\      ");
+    WRITE("  50 |A        O        C    ");
+    WRITE("     |  \\             /      ");
+    WRITE("  25 |    AB       BC        ");
+    WRITE("     |      \\    /           ");
+    WRITE("   0 |W        B        X    ");
+    WRITE("     ---------------------> X");
+    WRITE("     0    25   50  75  100   " << std::endl);
+
+    TEST_SQUARE("A (true)", {0, 50})
+    TEST_SQUARE("B (true)", {50, 0})
+    TEST_SQUARE("C (true)", {100, 50})
+    TEST_SQUARE("D (true)", {50, 100})
+
+    TEST_SQUARE("AB (true)", {25, 25})
+    TEST_SQUARE("BC (true)", {75, 25})
+    TEST_SQUARE("CD (true)", {75, 75})
+    TEST_SQUARE("DA (true)", {25, 75})
+
+    TEST_SQUARE("O (true)", {50, 50})
+
+    TEST_SQUARE("W (false)", {0, 0})
+    TEST_SQUARE("X (false)", {100, 0})
+    TEST_SQUARE("Y (false)", {100, 100})
+    TEST_SQUARE("Z (false)", {0, 100})
 }
 
-END_NAMESPACE_HAZ_GEOM2
+END_NAMESPACE_HAZ_HIDDEN

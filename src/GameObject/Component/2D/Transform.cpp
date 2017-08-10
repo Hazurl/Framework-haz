@@ -1,6 +1,6 @@
 #include <GameObject/Component/2D/Transform.hpp>
 
-BEG_NAMESPACE_HAZ_GEOM2
+BEG_NAMESPACE_HAZ_2D
 
 Transform::Transform(GameObject* go) : Component(go), position(0, 0), scale(1, 1), rotation(0) {
 
@@ -23,4 +23,4 @@ std::ostream& operator <<(std::ostream& os, Transform const& t) {
     return os;
 }
 
-END_NAMESPACE_HAZ_GEOM2
+END_NAMESPACE_HAZ_2D
