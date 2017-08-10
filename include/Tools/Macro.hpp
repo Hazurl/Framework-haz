@@ -23,6 +23,10 @@
 #define BEG_NAMESPACE_HAZ_COLLISION BEG_NAMESPACE_HAZ_2D namespace NS_HAZ_COLLISION {
 #define END_NAMESPACE_HAZ_COLLISION } END_NAMESPACE_HAZ_2D 
 
+#define HAZ_INLINE inline
+#define HAZ_FORCE_INLINE HAZ_INLINE 
+//__attribute__((always_inline)) 
+
 #define SAFE_DELETE_ARR(arr) if (arr) { delete [] arr; arr = nullptr; }
 #define SAFE_DELETE(ptr) if (ptr) { delete arr; att = nullptr; }
 

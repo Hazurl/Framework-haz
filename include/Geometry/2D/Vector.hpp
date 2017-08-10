@@ -37,18 +37,18 @@ public:
 
     ~Vector() {}
 
-    inline T getX() const { return this->x; }
-    inline T getY() const { return this->y; }
-    inline void setX(T _x) { this->x = _x; }
-    inline void setY(T _y) { this->y = _y; }
-    inline void set(T x, T y) { this->x = x; this->y = y; }
-    inline void set(Vector<T> const& o) { this->x = o.x; this->y = o.y; }
+    HAZ_FORCE_INLINE T getX() const { return this->x; }
+    HAZ_FORCE_INLINE T getY() const { return this->y; }
+    HAZ_FORCE_INLINE void setX(T _x) { this->x = _x; }
+    HAZ_FORCE_INLINE void setY(T _y) { this->y = _y; }
+    HAZ_FORCE_INLINE void set(T x, T y) { this->x = x; this->y = y; }
+    HAZ_FORCE_INLINE void set(Vector<T> const& o) { this->x = o.x; this->y = o.y; }
 
-    inline auto magnitude2() const {
+    HAZ_FORCE_INLINE auto magnitude2() const {
         return this->x * this->x + this->y * this->y;
     }
 
-    inline auto magnitude() const {
+    HAZ_FORCE_INLINE auto magnitude() const {
         return std::sqrt(magnitude2());
     }
 
@@ -81,37 +81,37 @@ public:
         return { haz::max<T>(a.x, b.x), haz::max<T>(a.y, b.y) };
     }
 
-    inline Vector<T> reverse() const {
+    HAZ_FORCE_INLINE Vector<T> reverse() const {
         return -(*this);
     }
 
-    inline Vector<T> orthogonal() const {
+    HAZ_FORCE_INLINE Vector<T> orthogonal() const {
         return { -this->y, this->x };
     }
 
-    inline Vector<T> orthogonal2() const {
+    HAZ_FORCE_INLINE Vector<T> orthogonal2() const {
         return { this->y, -this->x };
     }
 
-    inline Vector<T> normal(T n) const {
+    HAZ_FORCE_INLINE Vector<T> normal(T n) const {
         return (*this) * (n / magnitude());
     }
 
-    inline Vector<T> rotate(float radian) const {
+    HAZ_FORCE_INLINE Vector<T> rotate(float radian) const {
         auto c = cos(radian);
         auto s = sin(radian);
         return { this->x * c - this->y * s, this->x * s + this->y * c };
     }
 
-    inline T dot(Vector<T> const& a) const {
+    HAZ_FORCE_INLINE T dot(Vector<T> const& a) const {
         return a.x * this->x + a.y * this->y;
     }
 
-    inline T cross(Vector<T> const& v) const {
+    HAZ_FORCE_INLINE T cross(Vector<T> const& v) const {
         return (this->x * v.y) - (this->y * v.x);
     }
 
-    inline float angle(const Vector<T> &v) const {
+    HAZ_FORCE_INLINE float angle(const Vector<T> &v) const {
         return acosf(dot(v) / (magnitude() * v.magnitude()));
     }
 
@@ -123,7 +123,7 @@ public:
         return projected(n) * 2 - *this;
     }
 
-    inline T operator [] (unsigned int pos) const {
+    HAZ_FORCE_INLINE T operator [] (unsigned int pos) const {
         HAZ_ASSERT(pos == 0 || pos == 1);
         return pos == 0 ? this->x : this->y;
     }

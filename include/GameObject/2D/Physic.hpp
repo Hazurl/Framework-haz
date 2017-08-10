@@ -79,7 +79,7 @@ return gos;
 		RAYCAST_BODY_A()
 	}
 
-	inline static bool raycast_any(Environement const* e, Vectorf const& point, Layers layers = Layers::All) {
+	HAZ_FORCE_INLINE static bool raycast_any(Environement const* e, Vectorf const& point, Layers layers = Layers::All) {
 		std::array<const GameObject*, 1> out = {};
 		return raycast(e, point, out, layers) > 0;
 	}

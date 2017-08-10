@@ -51,7 +51,7 @@ public:
         other.data = nullptr;
     }
 
-    inline DynamicArray& operator=(DynamicArray other) {
+    HAZ_FORCE_INLINE DynamicArray& operator=(DynamicArray other) {
         DynamicArray::swap(*this, other);
         return *this;
     }
@@ -62,19 +62,19 @@ public:
         haz::swap(a.data, b.data);
     }
 
-    inline iterator begin() {
+    HAZ_FORCE_INLINE iterator begin() {
         return data;
     }
 
-    inline iterator end() {
+    HAZ_FORCE_INLINE iterator end() {
         return data + size;
     }
     
-    inline iterator_const begin() const {
+    HAZ_FORCE_INLINE iterator_const begin() const {
         return data;
     }
 
-    inline iterator_const end() const {
+    HAZ_FORCE_INLINE iterator_const end() const {
         return data + size;
     }
     
@@ -137,7 +137,7 @@ public:
         return data[pos];
     }
 
-    inline ValueConstRef operator[] (unsigned int pos) const {
+    HAZ_FORCE_INLINE ValueConstRef operator[] (unsigned int pos) const {
         HAZ_ASSERT_MSG("Out of bounds !", pos >= 0 && pos < size && data != nullptr);
         return data[pos];
     }
@@ -168,19 +168,19 @@ public:
         size = new_size;
     }
 
-    inline void cut() {
+    HAZ_FORCE_INLINE void cut() {
         reserve(size);
     }
 
-    inline bool isEmpty() const { 
+    HAZ_FORCE_INLINE bool isEmpty() const { 
         return size == 0;
     }
 
-    inline unsigned int getSize () const {
+    HAZ_FORCE_INLINE unsigned int getSize () const {
         return size;
     }
 
-    inline unsigned int getCapacity () const {
+    HAZ_FORCE_INLINE unsigned int getCapacity () const {
         return capacity;
     }
 
@@ -190,7 +190,7 @@ private:
     unsigned int capacity;
     static const unsigned int capacity_start = 8;
 
-    inline void reserve() {
+    HAZ_FORCE_INLINE void reserve() {
         reserve(capacity * 2);
     }
 };

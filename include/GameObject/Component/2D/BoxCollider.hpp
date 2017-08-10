@@ -17,14 +17,14 @@ public:
 
 	Component* clone(GameObject* go) const;
 
-	inline Vectorf position() const { return {x, y}; }
-	inline Vectorf center() const { return {x + width / 2, y + height / 2}; }
-	inline Vectorf size() const { return {width, height}; }
+	HAZ_FORCE_INLINE Vectorf position() const { return {x, y}; }
+	HAZ_FORCE_INLINE Vectorf center() const { return {x + width / 2, y + height / 2}; }
+	HAZ_FORCE_INLINE Vectorf size() const { return {width, height}; }
 
-	inline float top() const { return y; }
-	inline float bottom() const { return y + height; }
-	inline float left() const { return x; }
-	inline float right() const { return x + width; }
+	HAZ_FORCE_INLINE float top() const { return y; }
+	HAZ_FORCE_INLINE float bottom() const { return y + height; }
+	HAZ_FORCE_INLINE float left() const { return x; }
+	HAZ_FORCE_INLINE float right() const { return x + width; }
 
 	float x, y, width, height;
 };

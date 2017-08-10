@@ -17,7 +17,7 @@ public:
 
 	Component* clone(GameObject* go) const;
 	
-	inline Vectorf position() const { return {x, y}; }
+	HAZ_FORCE_INLINE Vectorf position() const { return {x, y}; }
 
 	float x, y, radius;
 };

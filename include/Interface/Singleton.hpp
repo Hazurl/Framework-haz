@@ -12,7 +12,7 @@ BEG_NAMESPACE_HAZ
 template<typename T>
 class Singleton : public UnCopyable {
 public:
-	inline static T& get() {
+	HAZ_FORCE_INLINE static T& get() {
         static T instance;
         return instance;
     }
