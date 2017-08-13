@@ -93,11 +93,11 @@ bool GameObject::isActive() const {
 void GameObject::setActive(bool b) {
     if (is_active != b) {
         if (b) {
-            for (auto* c : components)
-                c->onEnable();
+            for (auto& p : components)
+                p.second->onEnable();
         } else {
-            for (auto* c : components)
-                c->onDisable();
+            for (auto& p : components)
+                p.second->onDisable();
         }
     }
     is_active = b;

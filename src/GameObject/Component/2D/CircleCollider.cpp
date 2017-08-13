@@ -10,7 +10,7 @@ CircleCollider::CircleCollider(GameObject* go, float x, float y, float radius) :
 	
 }
 
-CircleCollider::CircleCollider(GameObject* go, Vectorf const& position, float radius) : Collider(go), x(position.getX()), y(position.getY()), radius(radius) {
+CircleCollider::CircleCollider(GameObject* go, Vectorf const& position, float radius) : Collider(go), x(position.x), y(position.y), radius(radius) {
 	
 }
 
@@ -26,20 +26,20 @@ bool CircleCollider::colliding(Collider const* other) const {
     if (auto const* b = dynamic_cast<const BoxCollider*>(other)) {
         Vectorf dist = (position() - b->center()).abs();
 
-        if (dist.getX() > (b->width / 2 + radius))
+        if (dist.x > (b->width / 2 + radius))
             return false;
 
-        if (dist.getY() > (b->height / 2 + radius))
+        if (dist.y > (b->height / 2 + radius))
             return false;
 
-        if (dist.getX() <= b->width / 2) 
+        if (dist.x <= b->width / 2) 
             return true;
 
-        if (dist.getY() <= b->height / 2) 
+        if (dist.y <= b->height / 2) 
             return true;
 
-        float dx = dist.getX() - b->width / 2;
-        float dy = dist.getY() - b->height / 2;
+        float dx = dist.x - b->width / 2;
+        float dy = dist.y - b->height / 2;
 
         return dx * dx + dy * dy <= radius * radius;
     }

@@ -14,19 +14,23 @@ struct Coords {
 };
 
 template<typename T>
-class Vector : private Coords<T> {
+class Vector : public Coords<T> {
 public:
 
     Vector() : Coords<T>() {}
     Vector(T x, T y) : Coords<T>(x, y) {}
 
-    static Vector<T> up()      { return {0, 1};  }
-    static Vector<T> down()    { return {0, -1}; }
-    static Vector<T> left()    { return {-1, 0}; }
-    static Vector<T> right()   { return {1, 0};  }
-    static Vector<T> zero()    { return {0, 0};  }
-    static Vector<T> one()     { return {1, 1};  }
+    static Vector<T> up()           { return {0, 1};  }
+    static Vector<T> down()         { return {0, -1}; }
+    static Vector<T> left()         { return {-1, 0}; }
+    static Vector<T> right()        { return {1, 0};  }
+    static Vector<T> zero()         { return {0, 0};  }
 
+    static Vector<T> upRight()      { return {1, 1};  }
+    static Vector<T> upLeft()       { return {-1, 1}; }
+    static Vector<T> bottomRight()  { return {1, -1}; }
+    static Vector<T> bottomLeft()   { return {-1, -1};}
+    
     static Vector<T> polar(T x, T y) {
         return { std::atan2(y, x), std::sqrt(x * x + y * y) };
     }
@@ -37,10 +41,6 @@ public:
 
     ~Vector() {}
 
-    HAZ_FORCE_INLINE T getX() const { return this->x; }
-    HAZ_FORCE_INLINE T getY() const { return this->y; }
-    HAZ_FORCE_INLINE void setX(T _x) { this->x = _x; }
-    HAZ_FORCE_INLINE void setY(T _y) { this->y = _y; }
     HAZ_FORCE_INLINE void set(T x, T y) { this->x = x; this->y = y; }
     HAZ_FORCE_INLINE void set(Vector<T> const& o) { this->x = o.x; this->y = o.y; }
 
@@ -165,6 +165,8 @@ public:
 
 typedef Vector<float> Vectorf;
 typedef Vector<int> Vectori;
+typedef Vector<unsigned int> Vectorui;
+typedef Vector<double> Vectord;
 
 END_NAMESPACE_HAZ_2D
 

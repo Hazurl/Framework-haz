@@ -20,7 +20,7 @@ SRC := $(foreach d,$(SRC_DIR),$(wildcard $(d)/*.cpp))
 MAIN_DIR := src/
 # Main file 
 # Pick one : main_go.cpp, main_benchmark.cpp, main_serialization.cpp
-MAIN := main_serialization.cpp
+MAIN := main_go.cpp
 # Main path
 MAIN_PATH := $(MAIN_DIR)/$(MAIN)
 # Main .o

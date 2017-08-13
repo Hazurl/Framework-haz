@@ -3,8 +3,8 @@
 BEG_NAMESPACE_HAZ_COLLISION
 
 bool point_in_box(BoxCollider const& b, Vectorf const& point) {
-    return haz::between_ii(point.getX(), b.left(), b.right()) 
-        && haz::between_ii(point.getY(), b.top(), b.bottom());
+    return haz::between_ii(point.x, b.left(), b.right()) 
+        && haz::between_ii(point.y, b.top(), b.bottom());
 }
 
 bool point_in_circle(CircleCollider const& c, Vectorf const& point) {
@@ -19,22 +19,22 @@ bool point_in_polygon(PolygonCollider const& p, Vectorf const& point) {
         auto cur = points[pos];
         auto last = points[prev];
 
-        if (((cur.getY() <= point.getY()) && (last.getY() >= point.getY())) || ((last.getY() <= point.getY()) && (cur.getY() >= point.getY()))) {
-            auto deno = last.getY() - cur.getY();
+        if (((cur.y <= point.y) && (last.y >= point.y)) || ((last.y <= point.y) && (cur.y >= point.y))) {
+            auto deno = last.y - cur.y;
             if (deno == 0) {
-                return (((cur.getX() <= point.getX()) && (last.getX() >= point.getX())) || ((last.getX() <= point.getX()) && (cur.getX() >= point.getX())));
+                return (((cur.x <= point.x) && (last.x >= point.x)) || ((last.x <= point.x) && (cur.x >= point.x)));
             } else {
-                auto cross = (last.getX() - cur.getX()) * (point.getY() - cur.getY()) / deno + cur.getX();
+                auto cross = (last.x - cur.x) * (point.y - cur.y) / deno + cur.x;
 
-                if (cross == point.getX())
+                if (cross == point.x)
                     return true;
 
-                if (cross <= point.getX()) {
-                    if (cross == cur.getX() && point.getY() == cur.getY()) {
-                        if (cur.getY() > last.getY())
+                if (cross <= point.x) {
+                    if (cross == cur.x && point.y == cur.y) {
+                        if (cur.y > last.y)
                             res = !res;
-                    } else if(cross == last.getX() && point.getY() == last.getY()) {
-                        if (cur.getY() < last.getY())
+                    } else if(cross == last.x && point.y == last.y) {
+                        if (cur.y < last.y)
                             res = !res;
                     } else {
                         res = !res;
@@ -69,7 +69,7 @@ Vectorf getClosestPointInEdge(Vectorf const& a, Vectorf const& b, Vectorf const&
     auto normal = seg.orthogonal();
 
     return Vectorf::lerpClamp(
-        (a.getX() * normal.getY() - point.getX() * normal.getY() - normal.getX() * a.getY() + normal.getX() * point.getY()) / (seg.getY() * normal.getX() - seg.getX() * normal.getY())
+        (a.x * normal.y - point.x * normal.y - normal.x * a.y + normal.x * point.y) / (seg.y * normal.x - seg.x * normal.y)
         , a, b);
 }
 
@@ -77,9 +77,9 @@ bool has_edge_intersection(Vectorf const& a, Vectorf const& b, Vectorf const& c,
     auto e0 = b - a;
     auto e1 = d - c;
 
-    float deno = e0.getY() * e1.getX() - e0.getX() * e1.getY();
-    float k = (a.getX() * e1.getY() - c.getX() * e1.getY() - e1.getX() * a.getY() + e1.getX() * c.getY()) / deno;
-    float m = (e0.getX() * a.getY() - e0.getX() * c.getY() - a.getX() * e0.getY() + c.getX() * e0.getY()) / deno;
+    float deno = e0.y * e1.x - e0.x * e1.y;
+    float k = (a.x * e1.y - c.x * e1.y - e1.x * a.y + e1.x * c.y) / deno;
+    float m = (e0.x * a.y - e0.x * c.y - a.x * e0.y + c.x * e0.y) / deno;
 
     return between_ii<float>(k, 0, 1) && between_ii<float>(m, 0, 1);
 }
@@ -88,14 +88,14 @@ bool edge_intersection(Vectorf& result, Vectorf const& a, Vectorf const& b, Vect
     auto e0 = b - a;
     auto e1 = d - c;
 
-    float deno = e0.getY() * e1.getX() - e0.getX() * e1.getY();
+    float deno = e0.y * e1.x - e0.x * e1.y;
 
     if (deno == 0) {
         return false;
     }
 
-    float m = (e0.getX() * a.getY() - e0.getX() * c.getY() - a.getX() * e0.getY() + c.getX() * e0.getY()) / deno;
-    float k = (a.getX() * e1.getY() - c.getX() * e1.getY() - e1.getX() * a.getY() + e1.getX() * c.getY()) / deno;
+    float m = (e0.x * a.y - e0.x * c.y - a.x * e0.y + c.x * e0.y) / deno;
+    float k = (a.x * e1.y - c.x * e1.y - e1.x * a.y + e1.x * c.y) / deno;
 
     if (between_ii<float>(k, 0, 1) && between_ii<float>(m, 0, 1)) {
         result = a + e0 * m;
