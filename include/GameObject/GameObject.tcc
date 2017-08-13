@@ -9,6 +9,7 @@ T* GameObject::addComponent(Args... args) {
 
     auto t = new T(this, args...);
     components[key] = t;
+    t->onEnable();
     return t;
 }
 
@@ -19,6 +20,7 @@ T* GameObject::addComponent() {
 
     auto t = new T(this);
     components[key] = t;
+    t->onEnable();
     return t;
 }
 
@@ -27,7 +29,9 @@ void GameObject::removeComponent() {
     std::size_t key = typeid(T).hash_code();
     HAZ_ASSERT_MSG("Component not in the gameObject !", components.find(key) != components.end());
 
-    delete components[key];
+    auto* c = components[key];
+    c->onDisable();
+    delete c;
     components.erase(key);
 }
 

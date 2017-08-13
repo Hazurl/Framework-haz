@@ -16,4 +16,7 @@ const GameObject* Component::getGO () const {
 
 void Component::update(Time const&, Environement* ) {}
 
+void Component::onEnable() {}
+void Component::onDisable() {}
+
 END_NAMESPACE_HAZ

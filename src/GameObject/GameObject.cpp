@@ -91,6 +91,15 @@ bool GameObject::isActive() const {
 }
 
 void GameObject::setActive(bool b) {
+    if (is_active != b) {
+        if (b) {
+            for (auto* c : components)
+                c->onEnable();
+        } else {
+            for (auto* c : components)
+                c->onDisable();
+        }
+    }
     is_active = b;
 }
 

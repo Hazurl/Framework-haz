@@ -19,8 +19,11 @@ public:
     GameObject* getGO ();
     const GameObject* getGO () const;
 
-    void update(Time const& t, Environement* e);
+    virtual void update(Time const& t, Environement* e);
 
+    virtual void onEnable();
+    virtual void onDisable();
+    
 protected:
 
 private:

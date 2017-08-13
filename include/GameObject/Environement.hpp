@@ -41,7 +41,6 @@ public:
     std::vector<Component*> getAllComponents();
     std::vector<const Component*> getAllComponents() const;
 
-private:
 	std::vector<GameObject*> gos;
 };
 
