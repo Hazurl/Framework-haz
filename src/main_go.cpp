@@ -12,6 +12,7 @@
 #include <iostream>
 
 #include <Interface/Factory.hpp>
+#include <Interface/RessourceLoader.hpp>
 
 int main (int , char ** ) {
     USING_NS_HAZ
