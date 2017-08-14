@@ -91,7 +91,7 @@ private:
         RessourceLoader::releaseAll();
     }
 
-    std::function<TType*(TAllocArg const&)> allocator = [] (TAllocArg const& s) { return new TType(s); };
+    std::function<TType*(TAllocArg const&)> allocator;
     std::map<TSceneKey, std::map<TKey, TType*>> ressources;
     std::map<TKey, TType*> global_ressources;
 };
