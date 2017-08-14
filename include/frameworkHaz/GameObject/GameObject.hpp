@@ -15,16 +15,21 @@ Layers, {
     Light           = 1 << 1,
     RayCast         = 1 << 2,
     UI              = 1 << 3,
-
-    Custom_1        = 1 << 10,
-    Custom_2        = 1 << 11,
-    Custom_3        = 1 << 12,
-    Custom_4        = 1 << 13,
-    Custom_5        = 1 << 14,
-    Custom_6        = 1 << 15,
-    Custom_7        = 1 << 16,
-    Custom_8        = 1 << 17,
-    Custom_9        = 1 << 18,
+    Ground          = 1 << 4,
+    OnGround        = 1 << 5,
+    AboveGround     = 1 << 6,
+    Sky             = 1 << 7,
+    
+    Custom_0        = 1 << 10,
+    Custom_1        = 1 << 11,
+    Custom_2        = 1 << 12,
+    Custom_3        = 1 << 13,
+    Custom_4        = 1 << 14,
+    Custom_5        = 1 << 15,
+    Custom_6        = 1 << 16,
+    Custom_7        = 1 << 17,
+    Custom_8        = 1 << 18,
+    Custom_9        = 1 << 19,
 
     All             = ~0
 });

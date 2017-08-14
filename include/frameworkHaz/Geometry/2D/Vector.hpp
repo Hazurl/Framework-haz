@@ -2,6 +2,7 @@
 #define __HAZ_2D_VECTOR
 
 #include <frameworkHaz/Tools/Macro.hpp>
+#include <frameworkHaz/Tools/Utility.hpp>
 #include <cmath>
 
 BEG_NAMESPACE_HAZ_2D
