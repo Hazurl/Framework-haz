@@ -16,7 +16,6 @@
 
 int main (int , char ** ) {
     USING_NS_HAZ
-    USING_NS_HAZ_HIDDEN
     USING_NS_HAZ_2D
     USING_NS_HAZ_COLLISION
 
@@ -31,6 +30,8 @@ int main (int , char ** ) {
     WRITE(g->getComponents().size());
 
     WRITE(g->to_string() << " -> " << g->getComponent<BoxCollider>()->position());
+
+    delete g;
 
     Time time;
 
@@ -54,5 +55,19 @@ int main (int , char ** ) {
     for (GameObject* go : Physic::raycast_all(&e, Vectorf{0, 0}))
         WRITE("Hit : " << go->to_string());
 
+    typedef RessourceLoader<std::string> RL;
+
+    std::string* s = RL::loadGlobal("ok");
+    std::string* ss = RL::getGlobal("ok");
+
+    std::cout << s << ", " << ss << std::endl;
+
+    typedef RessourceLoader<std::string, std::string, int> RR;
+    
+    std::string* q = RR::loadGlobal("ok", 0);
+    std::string* qq = RR::getGlobal(0);
+
+    std::cout << q << ", " << qq << std::endl;
+    
     return 0;
 }

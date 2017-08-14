@@ -3,34 +3,37 @@
 
 #include <frameworkHaz/Tools/Macro.hpp>
 #include <frameworkHaz/Interface/Singleton.hpp>
+#include <frameworkHaz/Interface/Allocator.hpp>
 #include <functional>
 
 BEG_NAMESPACE_HAZ
 
-template<typename TType, typename TAllocArg = std::string, typename TKey = TAllocArg, typename TSceneKey = int>
-class RessourceLoader : Singleton< RessourceLoader<TType, TAllocArg, TKey, TSceneKey> > {
-    typedef Singleton< RessourceLoader<TType, TAllocArg, TKey, TSceneKey> > S;
-    friend class Singleton< RessourceLoader<TType, TAllocArg, TKey, TSceneKey> >;
+template<typename TType, typename TAllocArg = std::string, typename TKey = TAllocArg, typename TSceneKey = int, typename TAllocator = DefaultAllocator<TType, TAllocArg>>
+class RessourceLoader : Singleton< RessourceLoader<TType, TAllocArg, TKey, TSceneKey, TAllocator> > {
+    typedef Singleton< RessourceLoader<TType, TAllocArg, TKey, TSceneKey, TAllocator> > S;
+    friend class Singleton< RessourceLoader<TType, TAllocArg, TKey, TSceneKey, TAllocator> >;
 
 public:
-
-    static void useAllocator(std::function<TType*(TKey const&)> allocator) {
-        S::get().allocator = allocator;
-    }
 
     static TType* get(TSceneKey const& scene, TKey const& key) {
         return S::get().ressources[scene][key];
     }
 
-    static TType* load(TSceneKey const& scene, TAllocArg const& arg) {
+    template<typename K = TKey, typename A = TAllocArg>
+    static typename std::enable_if<std::is_same<K, A>::value, TType*>::type load(TSceneKey const& scene, TAllocArg const& arg) {
         return load(scene, arg, arg);
+    }
+
+    template<typename K = TKey, typename A = TAllocArg>
+    static typename std::enable_if<!std::is_same<K, A>::value, TType*>::type load(TSceneKey const& scene, TAllocArg const& arg) {
+        HAZ_STATIC_ASSERT_MSG("Use load(scene, key, path) and not only load(scene, key_and_path) when the key and the argument is different !", (std::is_same<K, A>::value));
     }
 
     static TType* load(TSceneKey const& scene, TAllocArg const& arg, TKey const& key) {
         auto& sceneRessources = S::get().ressources[scene];
 
         if (sceneRessources.find(key) == sceneRessources.end()) {
-            return sceneRessources[key] = S::get().allocator(arg);
+            return sceneRessources[key] = S::get().allocator.allocate(arg);
         }
 
         return sceneRessources[key];
@@ -40,13 +43,19 @@ public:
         return S::get().global_ressources[key];
     }
 
-    static TType* loadGlobal(TAllocArg const& arg) {
+    template<typename K = TKey, typename A = TAllocArg>
+    static typename std::enable_if<std::is_same<K, A>::value, TType*>::type loadGlobal(TAllocArg const& arg) {
         return loadGlobal(arg, arg);
+    }
+
+    template<typename K = TKey, typename A = TAllocArg>
+    static typename std::enable_if<!std::is_same<K, A>::value, TType*>::type loadGlobal(TAllocArg const& arg) {
+        HAZ_STATIC_ASSERT_MSG("Use loadGlobal(key, path) and not only loadGlobal(key_and_path) when the key and the argument is different !", (std::is_same<K, A>::value));
     }
 
     static TType* loadGlobal(TAllocArg const& arg, TKey const& key) {
         if (S::get().global_ressources.find(key) == S::get().global_ressources.end()) {
-            return S::get().global_ressources[key] = S::get().allocator(arg);
+            return S::get().global_ressources[key] = S::get().allocator.allocate(arg);
         }
 
         return S::get().global_ressources[key];
@@ -59,7 +68,7 @@ public:
 
     static void releaseGlobal () {
         for(auto& p : S::get().global_ressources) {
-            delete p.second;
+            S::get().allocator.deallocate(p.second);
         }
         S::get().global_ressources.clear();
     }
@@ -70,7 +79,7 @@ public:
 
         auto& sceneRessources = S::get().ressources[scene];
         for(auto& p : sceneRessources) {
-            delete p.second;
+            S::get().allocator.deallocate(p.second);
         }
         S::get().ressources.erase(scene);
     }
@@ -78,7 +87,7 @@ public:
     static void releaseAllScenes () {
         for (auto& s : S::get().ressources) {
             for(auto& p : s.second) {
-                delete p.second;
+                S::get().allocator.deallocate(p.second);
             }
         }
         S::get().ressources.clear();
@@ -91,9 +100,10 @@ private:
         RessourceLoader::releaseAll();
     }
 
-    std::function<TType*(TAllocArg const&)> allocator;
     std::map<TSceneKey, std::map<TKey, TType*>> ressources;
     std::map<TKey, TType*> global_ressources;
+
+    TAllocator allocator;
 };
 
 END_NAMESPACE_HAZ

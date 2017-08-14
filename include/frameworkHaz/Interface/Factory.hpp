@@ -32,6 +32,7 @@ public:
         typename Map::iterator it = Base::get().objects.find(key);
         if (it != Base::get().objects.end())
             delete Base::get().objects[key];
+
         Base::get().objects[key] = obj;
     }
 

@@ -2,7 +2,9 @@
 
 BEG_NAMESPACE_HAZ
 
-GameObject::GameObject(std::string const& name) : components({}), name(name) {}
+GameObject::GameObject(std::string const& name) : components({}), name(name) {
+    
+}
 
 GameObject::~GameObject() {
     for (auto& p : components)
