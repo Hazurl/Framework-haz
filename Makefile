@@ -141,7 +141,7 @@ install: lib
 	@cp $(DEST_LIB) /usr/lib/
 	@mkdir /usr/include/frameworkHaz
 	@echo "Copy includes files to /usr/include/frameworkHaz ..."
-	@cp -a $(INCLUDE_FOLDER)/. /usr/include/frameworkHaz/
+	@cp -a $(INCLUDE_FOLDER)/. /usr/include/
 	@echo -n "\033[34m"
 	@echo "------------------"
 	@echo "Library installed!"

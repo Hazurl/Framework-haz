@@ -1,18 +1,18 @@
-#include <GameObject/GameObject.hpp>
+#include <frameworkHaz/GameObject/GameObject.hpp>
 
-#include <GameObject/Environement.hpp>
+#include <frameworkHaz/GameObject/Environement.hpp>
 
-#include <GameObject/2D/Physic.hpp>
+#include <frameworkHaz/GameObject/2D/Physic.hpp>
 
-#include <GameObject/Component/2D/Transform.hpp>
-#include <GameObject/Component/2D/BoxCollider.hpp>
-#include <GameObject/Component/2D/CircleCollider.hpp>
+#include <frameworkHaz/GameObject/Component/2D/Transform.hpp>
+#include <frameworkHaz/GameObject/Component/2D/BoxCollider.hpp>
+#include <frameworkHaz/GameObject/Component/2D/CircleCollider.hpp>
 
-#include <Tools/Macro.hpp>
+#include <frameworkHaz/Tools/Macro.hpp>
 #include <iostream>
 
-#include <Interface/Factory.hpp>
-#include <Interface/RessourceLoader.hpp>
+#include <frameworkHaz/Interface/Factory.hpp>
+#include <frameworkHaz/Interface/RessourceLoader.hpp>
 
 int main (int , char ** ) {
     USING_NS_HAZ

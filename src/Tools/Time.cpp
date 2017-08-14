@@ -1,4 +1,4 @@
-#include <Tools/Time.hpp>
+#include <frameworkHaz/Tools/Time.hpp>
 
 BEG_NAMESPACE_HAZ
 
