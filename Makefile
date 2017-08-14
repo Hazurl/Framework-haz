@@ -34,7 +34,7 @@ DEST := build/main_app
 # Build Directories
 BUILD_DIR := build build/main build/src $(addprefix build/src/,$(SRC_DIR)) build/lib build/shared $(addprefix build/shared/,$(SRC_DIR))
 # .o files
-OBJ := $(patsubst %.cpp,build/%.o,$(SRC))
+OBJ := $(patsubst %.cpp,build/src/%.o,$(SRC))
 # Shared files
 SHARED_OBJ := $(patsubst %.cpp,build/shared/%.o,$(SRC))
 # Lib destination
@@ -112,9 +112,10 @@ again:
 	@make clean
 	@make run
 
-# Use cpp_gen
+# Use fgen
 file:
-	cpp_gen --include --oh=$(dir) --oc=src/$(dir) --define=__HAZ_$(shell echo $(name) | tr a-z A-Z) --class=$(name) --filename=$(name) --hpp $(arg)
+	fgen -p=include/$(dir)/$(name).hpp -t=fgenTemplate/hppTemplate.hpp class=$(name) define=$(name)
+	fgen -p=src/$(dir)/$(name).cpp -t=fgenTemplate/cppTemplate.cpp class=$(name) include=$(dir)/$(name).hpp
 
 # Compile to shared objects
 build/shared/%.o: %.cpp
