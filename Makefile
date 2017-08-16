@@ -114,8 +114,8 @@ again:
 
 # Use fgen
 file:
-	fgen -p=include/$(dir)/$(name).hpp -t=fgenTemplate/hppTemplate.hpp class=$(name) define=$(name)
-	fgen -p=src/$(dir)/$(name).cpp -t=fgenTemplate/cppTemplate.cpp class=$(name) include=$(dir)/$(name).hpp
+	fgen -p=include/frameworkHaz/$(dir)/$(name).hpp -t=fgenTemplate/hppTemplate.hpp class=$(name) define=$(name)
+	fgen -p=src/$(dir)/$(name).cpp -t=fgenTemplate/cppTemplate.cpp class=$(name) include=frameworkHaz/$(dir)/$(name).hpp
 
 # Compile to shared objects
 build/shared/%.o: %.cpp

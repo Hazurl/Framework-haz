@@ -13,7 +13,8 @@ class Environement;
 class Component {
 public:
     Component(GameObject* go);
-    virtual ~Component() {};
+    virtual ~Component();
+    
     virtual Component* clone(GameObject* go) const = 0;
 
     GameObject* getGO ();
