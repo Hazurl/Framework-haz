@@ -1,9 +1,11 @@
 #include <frameworkHaz/GameObject/GameObject.hpp>
+#include <frameworkHaz/GameObject/Component/2D/Transform.hpp>
 
 BEG_NAMESPACE_HAZ
 
-GameObject::GameObject(std::string const& name) : components({}), name(name) {
-    
+GameObject::GameObject(std::string const& name, _2D::Vectorf const& position, float rotation, _2D::Vectorf const& scale) 
+    : components({}), tf(addComponent<_2D::Transform>(position, scale, rotation)), name(name) {
+
 }
 
 GameObject::~GameObject() {
@@ -58,6 +60,13 @@ void GameObject::setParent(GameObject* go) {
     parent = go;
 }
 
+GameObject* GameObject::getParent() {
+    return parent;
+}
+
+const GameObject* GameObject::getParent() const {
+    return parent;
+}
 
 void GameObject::addChild(GameObject* go) {
     if (go != nullptr)
@@ -76,6 +85,14 @@ std::vector<GameObject*> GameObject::getChilds() {
     return childs;
 }
 
+_2D::Transform& GameObject::transform() {
+    return *tf;
+}
+
+_2D::Transform const& GameObject::transform() const {
+    return *tf;
+}
+
 std::string GameObject::to_string() const {
     std::string s = name;
     s += " : ";
@@ -87,6 +104,56 @@ std::string GameObject::to_string() const {
     }
 
     return s;
+}
+
+void GameObject::pretty_console() const {
+    std::vector<std::vector<std::string>> str_comp;
+
+    std::string title = "[" + adress(this) + "] " + name;
+    if (tag.size() > 0) title += " @" + tag;
+
+    unsigned int lgth = title.size();
+
+    for (auto& p : components) {
+        std::vector<std::string> block { removeNameSpaceOfClassName(Component::component_to_string[p.first]) };
+        auto b = p.second->pretty_strings();
+        
+        block.insert(block.end(), b.begin(), b.end());
+
+        for (auto& s : block) {
+            lgth = max<unsigned int>(lgth, s.size());
+        }
+        str_comp.push_back(block);
+        if (p.second == tf) {
+            std::swap(str_comp[0], str_comp.back());
+        }
+    }
+    
+    std::cout << "╔ " << title << " ";
+    for (unsigned int i = 0; i < (lgth - title.size()) + 2; i++)
+        std::cout << "═";
+    std::cout << "╗" << std::endl;
+
+    for (auto& block : str_comp) {
+        std::cout << "║┌ " << block[0] << " ";
+        for (unsigned int i = 0; i < (lgth - block[0].size()); i++)
+            std::cout << "─";
+        std::cout << "┐║" << std::endl;
+    
+        for (unsigned int i = 1; i < block.size(); i++) {
+            std::cout << "║│ " << block[i] << std::string(lgth - block[i].size(), ' ') << " │║" << std::endl;
+        }
+    
+        std::cout << "║└";
+        for (unsigned int i = 0; i < lgth + 2; i++)
+            std::cout << "─";
+        std::cout << "┘║" << std::endl;
+    }
+
+    std::cout << "╚";
+    for (unsigned int i = 0; i < lgth + 4; i++)
+        std::cout << "═";
+    std::cout << "╝" << std::endl;
 }
 
 void GameObject::setName(std::string const& n) {

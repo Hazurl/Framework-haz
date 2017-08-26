@@ -24,5 +24,17 @@ std::string EdgeCollider::to_string() const {
     return s + " by " + std::to_string(radius) + " }";
 }
 
+std::vector<std::string> EdgeCollider::pretty_strings() const {
+    std::vector<std::string> v {
+        "Radius " + std::to_string(radius),
+        "Points (" + std::to_string(points.size()) + "):",
+    };
+
+    for (auto& p : points) {
+        v.push_back(" " + p.to_string());
+    }
+
+    return v;
+}
 
 END_NAMESPACE_HAZ_2D

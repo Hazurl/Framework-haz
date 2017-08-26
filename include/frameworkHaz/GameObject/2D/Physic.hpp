@@ -7,6 +7,7 @@
 #include <frameworkHaz/GameObject/GameObject.hpp>
 #include <frameworkHaz/Geometry/2D/Vector.hpp>
 
+#include <frameworkHaz/GameObject/Component/2D/Transform.hpp>
 #include <frameworkHaz/GameObject/Component/2D/BoxCollider.hpp>
 #include <frameworkHaz/GameObject/Component/2D/CircleCollider.hpp>
 #include <frameworkHaz/GameObject/Component/2D/EdgeCollider.hpp>
@@ -14,10 +15,10 @@
 
 BEG_NAMESPACE_HAZ_COLLISION
 
-bool point_in_box(BoxCollider const& b, Vectorf const& point);
-bool point_in_circle(CircleCollider const& c, Vectorf const& point);
-bool point_in_polygon(PolygonCollider const& p, Vectorf const& point);
-bool point_in_edge(EdgeCollider const& e, Vectorf const& point);
+bool point_in_box(BoxCollider const& b, Vectorf point);
+bool point_in_circle(CircleCollider const& c, Vectorf point);
+bool point_in_polygon(PolygonCollider const& p, Vectorf point);
+bool point_in_edge(EdgeCollider const& e, Vectorf point);
 Vectorf getClosestPointInEdge(Vectorf const& a, Vectorf const& b, Vectorf const& point);
 bool has_edge_intersection(Vectorf const& a, Vectorf const& b, Vectorf const& c, Vectorf const& d);
 bool edge_intersection(Vectorf& result, Vectorf const& a, Vectorf const& b, Vectorf const& c, Vectorf const& d);
@@ -92,6 +93,18 @@ return gos;
 	static std::vector<GameObject*> raycast_all(Environement* e, Vectorf const& point, Layers layers = Layers::All) {
 		std::vector<GameObject*> gos = {};
 		RAYCAST_BODY_V()	
+	}
+
+	static GameObject* raycast_first(Environement* e, Vectorf const& point, Layers layers = Layers::All) {
+		std::array<GameObject*, 1> out = {};
+		raycast(e, point, out, layers);
+		return raycast(e, point, out, layers) > 0 ? out[0] : nullptr;	
+	}
+
+	static const GameObject* raycast_first(Environement const* e, Vectorf const& point, Layers layers = Layers::All) {
+		std::array<const GameObject*, 1> out = {};
+		raycast(e, point, out, layers);
+		return raycast(e, point, out, layers) > 0 ? out[0] : nullptr;	
 	}
 };
 

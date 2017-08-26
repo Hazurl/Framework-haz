@@ -2,11 +2,13 @@
 #define __HAZ_GAMEOBJECT
 
 #include <frameworkHaz/GameObject/Component/Component.hpp>
+#include <frameworkHaz/Geometry/2D/Vector.hpp>
 #include <frameworkHaz/Tools/Macro.hpp>
 #include <frameworkHaz/Tools/Utility.hpp>
 #include <map>
 #include <vector>
 #include <algorithm>
+#include <sstream>
 #include <frameworkHaz/Tools/EnumFlag.hpp>
 
 ENUM_FLAG_NESTED(BEG_NAMESPACE_HAZ, END_NAMESPACE_HAZ, 
@@ -34,6 +36,12 @@ Layers, {
     All             = ~0
 });
 
+BEG_NAMESPACE_HAZ_2D
+
+class Transform;
+
+END_NAMESPACE_HAZ_2D
+
 BEG_NAMESPACE_HAZ
 
 #define TEMPLATE_T template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
@@ -42,7 +50,7 @@ BEG_NAMESPACE_HAZ
 
 class GameObject {
 public:
-    GameObject(std::string const& name);
+    GameObject(std::string const& name, _2D::Vectorf const& position = _2D::Vectorf::zero(), float rotation = 0, _2D::Vectorf const& scale = _2D::Vectorf::units());
 
     virtual ~GameObject();
 
@@ -73,22 +81,34 @@ public:
     TEMPLATE_T T* getComponentInParent();
     TEMPLATE_T const T* getComponentInParent() const;
 
+    /* Parent / Childs */
     void setParent(GameObject* go);
+    GameObject* getParent();
+    const GameObject* getParent() const;
     void addChild(GameObject* go);
     std::vector<GameObject*> getChilds();
     std::vector<GameObject const*> getChilds() const;
-            
+
+    /* Transform */
+    _2D::Transform& transform();
+    _2D::Transform const& transform() const;
+    
+    /* Name */
     std::string to_string() const;
+    void pretty_console() const;
     void setName(std::string const& n);
     bool compareName(std::string const& n);
 
+    /* Tag */
     std::string getTag() const;
     void setTag(std::string const& t);
     bool compareTag(std::string const& t);
 
+    /* Active */
     bool isActive() const;
     void setActive(bool b);
 
+    /* Layers */
     bool isOnAnyLayer(Layers l) const;
     bool isOnAllLayers(Layers l) const;
     void AddLayer(Layers l);
@@ -99,10 +119,13 @@ public:
 protected:
 
 private:
+    /* Members */
     std::map<std::size_t, Component*> components;
 
     GameObject* parent = nullptr;
     std::vector<GameObject*> childs = {};
+
+    _2D::Transform* tf;
 
     std::string name;
     std::string tag = "";

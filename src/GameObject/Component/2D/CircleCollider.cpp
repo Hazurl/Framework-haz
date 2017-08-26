@@ -26,4 +26,11 @@ Component* CircleCollider::clone(GameObject* go) const {
     return new CircleCollider(go, x, y, radius);
 }
 
+std::vector<std::string> CircleCollider::pretty_strings() const {
+    return {
+        "Position (" + std::to_string(x) + ", " + std::to_string(y) + ")",
+        "Radius " + std::to_string(radius)
+    };
+}
+
 END_NAMESPACE_HAZ_2D

@@ -16,6 +16,10 @@ std::string Component::to_string() const {
     return "";
 }
 
+std::vector<std::string> Component::pretty_strings () const {
+    return {};
+}
+
 GameObject* Component::getGO () {
     return go;
 }

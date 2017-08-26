@@ -2,16 +2,17 @@
 
 BEG_NAMESPACE_HAZ_COLLISION
 
-bool point_in_box(BoxCollider const& b, Vectorf const& point) {
+bool point_in_box(BoxCollider const& b, Vectorf point) {
+    point -= b.getGO()->transform().globalPosition();
     return haz::between_ii(point.x, b.left(), b.right()) 
         && haz::between_ii(point.y, b.top(), b.bottom());
 }
 
-bool point_in_circle(CircleCollider const& c, Vectorf const& point) {
+bool point_in_circle(CircleCollider const& c, Vectorf point) {
     return (c.position() - point).magnitude2() <= c.radius * c.radius;
 }
 
-bool point_in_polygon(PolygonCollider const& p, Vectorf const& point) {
+bool point_in_polygon(PolygonCollider const& p, Vectorf point) {
     const auto points = p.getPath();
 
     bool res = false;
@@ -47,7 +48,7 @@ bool point_in_polygon(PolygonCollider const& p, Vectorf const& point) {
     return res;
 }
 
-bool point_in_edge(EdgeCollider const& e, Vectorf const& point) {
+bool point_in_edge(EdgeCollider const& e, Vectorf point) {
     if (e.points.size() <= 1) {
         return e.points.size() == 0 ? false :
             point_in_circle({nullptr, e.points[0], e.radius}, point);

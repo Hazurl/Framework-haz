@@ -7,6 +7,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 BEG_NAMESPACE_HAZ
 
@@ -19,6 +20,7 @@ public:
     virtual ~Component();
     
     virtual std::string to_string() const;
+    virtual std::vector<std::string> pretty_strings () const;
     
     virtual Component* clone(GameObject* go) const = 0;
 

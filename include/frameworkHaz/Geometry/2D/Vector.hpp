@@ -26,8 +26,10 @@ public:
     static Vector<T> down()         { return {0, -1}; }
     static Vector<T> left()         { return {-1, 0}; }
     static Vector<T> right()        { return {1, 0};  }
-    static Vector<T> zero()         { return {0, 0};  }
 
+    static Vector<T> zero()         { return {0, 0};  }
+    static Vector<T> units()        { return {1, 1};  }
+    
     static Vector<T> upRight()      { return {1, 1};  }
     static Vector<T> upLeft()       { return {-1, 1}; }
     static Vector<T> bottomRight()  { return {1, -1}; }

@@ -16,7 +16,8 @@ public:
 	~BoxCollider();
 
 	std::string to_string() const;
-
+    std::vector<std::string> pretty_strings() const;
+	
 	Component* clone(GameObject* go) const;
 
 	HAZ_FORCE_INLINE Vectorf position() const { return {x, y}; }

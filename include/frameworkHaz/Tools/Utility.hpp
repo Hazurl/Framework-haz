@@ -94,12 +94,22 @@ HAZ_FORCE_INLINE std::string demangleTypeIdName(const char* name) {
     return ret_val;
 }
 
+HAZ_FORCE_INLINE std::string removeNameSpaceOfClassName(std::string const& s) {
+    int pos = s.find_last_of(':');
+    return s.substr(pos + 1);
+}
+
 template<typename T>
 std::string adress(T* t) {
     std::stringstream ss;
     ss << t;
     return ss.str();
 }
+
+#define CST_S static_cast
+#define CST_D dynamic_cast
+#define CST_C const_cast
+#define CST_R reinterpret_cast
 
 END_NAMESPACE_HAZ
 

@@ -33,4 +33,16 @@ std::string PolygonCollider::to_string() const {
     return s + " }";
 }
 
+std::vector<std::string> PolygonCollider::pretty_strings() const {
+    std::vector<std::string> v {
+        "Points (" + std::to_string(points.size()) + "):",
+    };
+
+    for (auto& p : points) {
+        v.push_back(" " + p.to_string());
+    }
+
+    return v;
+}
+
 END_NAMESPACE_HAZ_2D
