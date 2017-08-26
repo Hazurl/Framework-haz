@@ -23,4 +23,14 @@ void PolygonCollider::setPath(std::vector<Vectorf> const& points) {
     this->points = points;
 }
 
+std::string PolygonCollider::to_string() const {
+    std::string s = "{";
+
+    for (auto& p : points) {
+        s += " " + p.to_string();
+    }
+
+    return s + " }";
+}
+
 END_NAMESPACE_HAZ_2D

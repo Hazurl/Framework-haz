@@ -75,7 +75,9 @@ public:
 
     void setParent(GameObject* go);
     void addChild(GameObject* go);
-
+    std::vector<GameObject*> getChilds();
+    std::vector<GameObject const*> getChilds() const;
+            
     std::string to_string() const;
     void setName(std::string const& n);
     bool compareName(std::string const& n);

@@ -3,6 +3,7 @@
 
 #include <frameworkHaz/Tools/Macro.hpp>
 #include <utility>
+#include <sstream>
 #include <memory>
 #include <cxxabi.h>
 
@@ -91,6 +92,13 @@ HAZ_FORCE_INLINE std::string demangleTypeIdName(const char* name) {
     );
     free(res);
     return ret_val;
+}
+
+template<typename T>
+std::string adress(T* t) {
+    std::stringstream ss;
+    ss << t;
+    return ss.str();
 }
 
 END_NAMESPACE_HAZ

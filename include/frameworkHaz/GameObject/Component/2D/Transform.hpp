@@ -14,7 +14,9 @@ public:
     Transform(GameObject* go, Vectorf const& position, Vectorf const& scale, float rotation);
     ~Transform();
 
-	Component* clone(GameObject* go) const;
+    std::string to_string() const;
+    
+    Component* clone(GameObject* go) const;
 
     friend std::ostream& operator <<(std::ostream& os, Transform const& t);
 

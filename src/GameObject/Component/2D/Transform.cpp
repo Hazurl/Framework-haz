@@ -18,8 +18,12 @@ Component* Transform::clone(GameObject* go) const {
     return new Transform(go, position, scale, rotation);
 }
 
+std::string Transform::to_string () const {
+    return "{ position : " + position.to_string() + ", rotation : " + std::to_string(rotation) + ", scale : " + scale.to_string() + " }";
+}
+
 std::ostream& operator <<(std::ostream& os, Transform const& t) {
-    os << "[position : " << t.position << ", rotation : " << t.rotation << ", scale : " << t.scale << "]";
+    os << t.to_string();
     return os;
 }
 

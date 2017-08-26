@@ -14,6 +14,8 @@ public:
 	EdgeCollider(GameObject* go, std::vector<Vectorf> const& points, float radius = 0);
 	~EdgeCollider();
 
+	std::string to_string() const;
+	
 	Component* clone(GameObject* go) const;
 
 	std::vector<Vectorf> points;

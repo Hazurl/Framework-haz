@@ -37,7 +37,7 @@ public:
     }
 
     static O* createObject(K const& key) {
-        return new O(*Base::get().objects[key]);
+        return new O(*Base::get().objects.at(key));
     }
 
 private:

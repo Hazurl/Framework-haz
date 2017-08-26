@@ -104,4 +104,28 @@ std::vector<const GameObject*> Environement::find_GOs_of_tag(std::string const& 
     return v;
 }
 
+void Environement::print_to_tree() {
+    for (unsigned int i = 0; i < gos.size(); ++i) {
+        print_to_tree_helper(gos[i], "", i == (gos.size() - 1));
+    }
+}
+
+void Environement::print_to_tree_helper(GameObject* cur, std::string indent, bool is_last) {
+    auto text = indent;
+    if (is_last) {
+        text += "└───";
+        indent += "    ";
+    } else {
+        text += "├───";
+        indent += "│  ";
+    }
+
+    std::cout << text << " [" << cur << "] " << cur->to_string() << std::endl;
+
+    auto childs = cur->getChilds();
+    for (unsigned int i = 0; i < childs.size(); ++i) {
+        print_to_tree_helper(childs[i], indent, i == (childs.size() - 1));
+    }
+}
+
 END_NAMESPACE_HAZ

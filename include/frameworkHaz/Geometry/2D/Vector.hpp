@@ -4,6 +4,7 @@
 #include <frameworkHaz/Tools/Macro.hpp>
 #include <frameworkHaz/Tools/Utility.hpp>
 #include <cmath>
+#include <string>
 
 BEG_NAMESPACE_HAZ_2D
 
@@ -129,6 +130,10 @@ public:
         return pos == 0 ? this->x : this->y;
     }
 
+    std::string to_string() const {
+        return "(" + std::to_string(this->x) + ", " + std::to_string(this->y) + ")";
+    }
+
     Vector<T>& operator += (Vector<T> const& v) { this->x += v.x; this->y += v.y; return *this; }
     Vector<T>& operator -= (Vector<T> const& v) { this->x -= v.x; this->y -= v.y; return *this; }
     Vector<T>& operator *= (T f) { this->x *= f; this->y *= f; return *this; }
@@ -152,11 +157,11 @@ public:
     friend Vector<T> operator % (Vector<T> a, T f) { return a %= f; }
 
     friend std::ostream& operator <<(std::ostream& os, Vector<T> const& v) {
-        os << "(" << v.x << ", " << v.y << ")";
+        os << v.to_string();
         return os;
     }
 
-    friend std::istream& operator <<(std::istream& is, Vector<T>& v) {
+    friend std::istream& operator >>(std::istream& is, Vector<T>& v) {
         is >> v.x;
         is >> v.y;
         return is;

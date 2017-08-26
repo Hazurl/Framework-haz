@@ -15,8 +15,8 @@ GameObject::~GameObject() {
 
 GameObject::GameObject(GameObject const& o) : parent(o.parent), name(o.name), tag(o.tag), is_active(o.is_active), layers(o.layers) {
     // Components
-    for (auto& p : o.components)
-        components[p.first] = p.second->clone(this);
+    for (auto& p : o.components) 
+        (components[p.first] = p.second->clone(this))->onEnable();
 
     // Childs
     for (auto* child : o.childs) 
@@ -64,8 +64,29 @@ void GameObject::addChild(GameObject* go) {
         go->setParent(this);
 }
 
+std::vector<GameObject const*> GameObject::getChilds() const {
+    std::vector<GameObject const*> cs = {};
+    for (auto* c : childs)
+        cs.push_back(c);
+
+    return cs;
+}
+
+std::vector<GameObject*> GameObject::getChilds() {
+    return childs;
+}
+
 std::string GameObject::to_string() const {
-    return name;
+    std::string s = name;
+    s += " : ";
+    bool is_first = true;
+    for (auto& p : components) {
+        if (is_first) is_first = false;
+        else s += ", ";
+        s += "[" + adress(p.second) + "] " + Component::component_to_string[p.first] + p.second->to_string();
+    }
+
+    return s;
 }
 
 void GameObject::setName(std::string const& n) {
@@ -101,8 +122,12 @@ void GameObject::setActive(bool b) {
             for (auto& p : components)
                 p.second->onDisable();
         }
+        is_active = b;
+        
+        for(auto* c : childs) {
+            c->setActive(b);
+        }
     }
-    is_active = b;
 }
 
 bool GameObject::isOnAnyLayer(Layers l) const {

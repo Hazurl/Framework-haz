@@ -5,6 +5,9 @@
 #include <frameworkHaz/Tools/Utility.hpp>
 #include <frameworkHaz/Tools/Time.hpp>
 
+#include <map>
+#include <string>
+
 BEG_NAMESPACE_HAZ
 
 class GameObject;
@@ -15,6 +18,8 @@ public:
     Component(GameObject* go);
     virtual ~Component();
     
+    virtual std::string to_string() const;
+    
     virtual Component* clone(GameObject* go) const = 0;
 
     GameObject* getGO ();
@@ -24,6 +29,8 @@ public:
 
     virtual void onEnable();
     virtual void onDisable();
+
+    static std::map<long, std::string> component_to_string;
     
 protected:
 

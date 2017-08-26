@@ -14,6 +14,9 @@
 #include <frameworkHaz/Interface/Factory.hpp>
 #include <frameworkHaz/Interface/RessourceLoader.hpp>
 
+#include <frameworkHaz/2DGOInclude.hpp>
+
+
 int main (int , char ** ) {
     USING_NS_HAZ
     USING_NS_HAZ_2D
@@ -68,6 +71,6 @@ int main (int , char ** ) {
     std::string* qq = RR::getGlobal(0);
 
     std::cout << q << ", " << qq << std::endl;
-    
+
     return 0;
 }

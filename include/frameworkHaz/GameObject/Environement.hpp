@@ -3,9 +3,11 @@
 
 #include <frameworkHaz/Tools/Macro.hpp>
 #include <frameworkHaz/GameObject/GameObject.hpp>
-#include <vector>
 #include <frameworkHaz/Geometry/2D/Vector.hpp>
 #include <frameworkHaz/GameObject/Component/2D/Collider.hpp>
+
+#include <vector>
+#include <map>
 
 BEG_NAMESPACE_HAZ
 
@@ -18,6 +20,8 @@ public:
 
 	GameObject* addGameObject(GameObject* go);
 
+	std::vector<GameObject*> gos;
+	
 	/* Find */
 
 	GameObject* find_GO_of_name(std::string const& name);
@@ -39,9 +43,13 @@ public:
     TEMPLATE_T const T* getComponent() const;
 
     std::vector<Component*> getAllComponents();
-    std::vector<const Component*> getAllComponents() const;
-
-	std::vector<GameObject*> gos;
+	std::vector<const Component*> getAllComponents() const;
+	
+	/* Debug */
+	void print_to_tree ();
+private:
+	void print_to_tree_helper (GameObject* cur, std::string indent, bool is_last);
+	
 };
 
 #undef TEMPLATE_T

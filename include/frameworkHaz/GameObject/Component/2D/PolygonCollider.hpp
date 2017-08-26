@@ -14,6 +14,8 @@ public:
 	PolygonCollider(GameObject* go, std::vector<Vectorf> const& points);
 	~PolygonCollider();
 
+	std::string to_string() const;
+	
 	Component* clone(GameObject* go) const;
 
 	std::vector<Vectorf> getPath() const;
