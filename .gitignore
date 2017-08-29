@@ -34,3 +34,6 @@
 # Useless directories
 .vscode
 build/
+html/
+
+latex/
