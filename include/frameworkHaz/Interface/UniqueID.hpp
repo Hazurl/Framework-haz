@@ -2,19 +2,17 @@
 #define __HAZ_IDABLE
 
 #include <frameworkHaz/Tools/Macro.hpp>
+#include <cstdint>
 
 BEG_NAMESPACE_HAZ
 
-class IDable {
+class UniqueID {
 public:
-    typedef long ID_t;
+    UniqueID();
 
-    IDable() ;
-
-    const ID_t id;
+    const std::uintptr_t id;
 
 private:
-    static ID_t next;
 };
 
 END_NAMESPACE_HAZ

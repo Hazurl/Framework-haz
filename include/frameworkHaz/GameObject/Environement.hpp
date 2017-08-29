@@ -8,40 +8,44 @@
 
 #include <vector>
 #include <map>
+#include <string>
 
 BEG_NAMESPACE_HAZ
 
-#define TEMPLATE_T template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
-
 class Environement {
 public:
+	/* Ctor Dtor */
 	Environement();
-	virtual ~Environement();
+	~Environement();
 
-	GameObject* addGameObject(GameObject* go);
+	/* GameObjects Modifier */
+#define TEMP_ARGS template<typename ...Args>
+	TEMP_ARGS GameObject* instantiate(Args... args);
+#undef TEMP_ARGS
 
+private:
 	std::vector<GameObject*> gos;
-	
-	/* Find */
 
+public:	
+	/* Components Query */
+		/* By Name */
 	GameObject* find_GO_of_name(std::string const& name);
-	GameObject* find_GO_of_tag(std::string const& tag);
-
-	std::vector<GameObject*> find_GOs_of_name(std::string const& name);
-	std::vector<GameObject*> find_GOs_of_tag(std::string const& tag);
-
 	const GameObject* find_GO_of_name(std::string const& name) const;
-	const GameObject* find_GO_of_tag(std::string const& tag) const;
-
+	std::vector<GameObject*> find_GOs_of_name(std::string const& name);
 	std::vector<const GameObject*> find_GOs_of_name(std::string const& name) const;
+		/* By Tag */
+	GameObject* find_GO_of_tag(std::string const& tag);
+	const GameObject* find_GO_of_tag(std::string const& tag) const;
+	std::vector<GameObject*> find_GOs_of_tag(std::string const& tag);
 	std::vector<const GameObject*> find_GOs_of_tag(std::string const& tag) const;
-
-    TEMPLATE_T std::vector<T*> getComponents();
-    TEMPLATE_T std::vector<const T*> getComponents() const;
-
-    TEMPLATE_T T* getComponent();
-    TEMPLATE_T const T* getComponent() const;
-
+		/* By Type */
+#define TEMP_COMP template<typename T, typename = typename std::enable_if<std::is_base_of<Component, T>::value>::type>
+	TEMP_COMP T* getComponent();
+	TEMP_COMP const T* getComponent() const;
+	TEMP_COMP std::vector<T*> getComponents();
+	TEMP_COMP std::vector<const T*> getComponents() const;
+#undef TEMP_COMP
+		/* All */
     std::vector<Component*> getAllComponents();
 	std::vector<const Component*> getAllComponents() const;
 	
@@ -52,12 +56,49 @@ private:
 	
 };
 
-#undef TEMPLATE_T
-#define TEMPLATE_T template<typename T, typename>
+#define TEMP_ARGS template<typename ...Args>
 
-#include <frameworkHaz/GameObject/Environement.tcc>
+TEMP_ARGS
+GameObject* Environement::instantiate(Args... args) {
+	GameObject* go = new GameObject(args...);
+	gos.push_back(go);
+	return go;
+}
 
-#undef TEMPLATE_T
+#undef TEMP_ARGS
+
+#define TEMP_COMP template<typename T, typename>
+TEMP_COMP std::vector<T*> Environement::getComponents() {
+    std::vector<T*> v = {};
+    for (auto* go : gos)
+        for (auto* c : go->getComponentsInChilds<T>())
+            v.push_back(c);
+
+    return v;
+}
+TEMP_COMP std::vector<const T*> Environement::getComponents() const {
+    std::vector<const T*> v = {};
+    for (auto* go : gos)
+        for (auto* c : go->getComponentsInChilds<T>())
+            v.push_back(c);
+
+    return v;
+}
+TEMP_COMP T* Environement::getComponent() {
+    for (auto* go : gos)
+        for (auto* c : go->getComponentsInChilds<T>())
+            return c;
+
+    return nullptr;
+}
+TEMP_COMP const T* Environement::getComponent() const {
+    for (auto* go : gos)
+        for (auto* c : go->getComponentsInChilds<T>())
+            return c;
+    
+    return nullptr;
+}
+#undef TEMP_COMP
 
 END_NAMESPACE_HAZ
 

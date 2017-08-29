@@ -38,9 +38,9 @@ public:
 
 #define RAYCAST_SUB_BODY_A(T, F)\
 for (auto* col : e->getComponents<T>()) {\
-	if (col->getGO()->isOnAnyLayer(layers)) {\
+	if (col->gameobject()->isOnAnyLayer(layers)) {\
 		if (Collision::F(*col, point)) {\
-			out[pos++] = col->getGO();\
+			out[pos++] = col->gameobject();\
 			if (pos >= N)\
 				return N;\
 		}\
@@ -58,9 +58,9 @@ return pos;
 
 #define RAYCAST_SUB_BODY_V(T, F)\
 for (auto* col : e->getComponents<T>())\
-	if (col->getGO()->isOnAnyLayer(layers))\
+	if (col->gameobject()->isOnAnyLayer(layers))\
 		if (Collision::F(*col, point))\
-			gos.push_back(col->getGO());
+			gos.push_back(col->gameobject());
 
 #define RAYCAST_BODY_V()\
 USING_NS_HAZ_COLLISION \

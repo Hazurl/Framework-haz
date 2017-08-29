@@ -19,10 +19,9 @@ Vectorf Transform::position() const {
 }
 
 Vectorf Transform::globalPosition() const {
-    auto* go = getGO();
-    auto* parent = go->getParent();
+    auto* parent = gameobject()->parent();
     
-    return parent == nullptr ? position() : position() + parent->transform().globalPosition();
+    return parent == nullptr ? position() : position() + parent->transform()->globalPosition();
 }
 
 Vectorf Transform::scale() const {
@@ -30,10 +29,9 @@ Vectorf Transform::scale() const {
 }
 
 Vectorf Transform::globalScale() const {
-    auto* go = getGO();
-    auto* parent = go->getParent();
+    auto* parent = gameobject()->parent();
     
-    return parent == nullptr ? scale() : scale() + parent->transform().globalScale();
+    return parent == nullptr ? scale() : scale() + parent->transform()->globalScale();
 }
 
 float Transform::rotation() const {
@@ -41,10 +39,9 @@ float Transform::rotation() const {
 }
 
 float Transform::globalRotation() const {
-    auto* go = getGO();
-    auto* parent = go->getParent();
+    auto* parent = gameobject()->parent();
     
-    return parent == nullptr ? rotation() : rotation() + parent->transform().globalRotation();
+    return parent == nullptr ? rotation() : rotation() + parent->transform()->globalRotation();
 }
 
 void Transform::position(Vectorf const& p) {
@@ -91,5 +88,9 @@ std::ostream& operator <<(std::ostream& os, Transform const& t) {
     os << t.to_string();
     return os;
 }
+
+void Transform::onEnable() {}
+void Transform::onDisable() {}
+
 
 END_NAMESPACE_HAZ_2D

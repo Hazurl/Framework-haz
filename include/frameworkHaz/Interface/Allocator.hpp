@@ -8,11 +8,14 @@ BEG_NAMESPACE_HAZ
 template<typename TType, typename ...TArgs>
 class Allocator {
 public:
+    virtual ~Allocator() = 0;
 
     virtual TType* allocate(TArgs ... args) = 0;
     virtual void deallocate(TType* t) = 0;
-
 };
+
+template<typename TType, typename ...TArgs>
+Allocator<TType, TArgs...>::~Allocator() {}
 
 template<typename TType, typename ...TArgs>
 class DefaultAllocator : public Allocator<TType, TArgs...> {

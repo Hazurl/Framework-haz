@@ -25,12 +25,10 @@ protected:
     }
 
     void subscribe () {
-        std::cout << "subscribe " << static_cast<T*>(this) << std::endl;
         set.insert(static_cast<T*>(this));
     }
 
     void unsubscribe () {
-        std::cout << "unsubscribe " << static_cast<T*>(this) << std::endl;
         set.erase(static_cast<T*>(this));
     }
 

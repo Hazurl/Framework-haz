@@ -6,7 +6,6 @@
 
 #include <frameworkHaz/GameObject/GameObject.hpp>
 #include <frameworkHaz/GameObject/Environement.hpp>
-#include <frameworkHaz/GameObject/Component/Component.hpp>
 #include <frameworkHaz/Tools/Time.hpp>
 
 #endif

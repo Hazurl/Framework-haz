@@ -1,7 +1,7 @@
 #ifndef __HAZ_2D_COLLIDER
 #define __HAZ_2D_COLLIDER
 
-#include <frameworkHaz/GameObject/Component/Component.hpp>
+#include <frameworkHaz/GameObject/GameObject.hpp>
 #include <frameworkHaz/Tools/Macro.hpp>
 #include <frameworkHaz/Tools/Utility.hpp>
 #include <frameworkHaz/Geometry/2D/Vector.hpp>
