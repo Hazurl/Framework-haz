@@ -40,6 +40,10 @@ public:
         return new O(*Base::get().objects.at(key));
     }
 
+    static O* original(K const& key) {
+        return Base::get().objects.at(key);
+    }
+
 private:
     Map objects = {};
 };

@@ -141,7 +141,11 @@ public:
     Vector<T>& operator *= (T f) { this->x *= f; this->y *= f; return *this; }
     Vector<T>& operator /= (T f) { this->x /= f; this->y /= f; return *this; }
     Vector<T>& operator %= (T f) { this->x %= f; this->y %= f; return *this; }
+    Vector<T>& operator *= (Vector<T> const& v) { this->x *= v.x; this->y *= v.y; return *this; }
+    Vector<T>& operator /= (Vector<T> const& v) { this->x /= v.x; this->y /= v.y; return *this; }
+    Vector<T>& operator %= (Vector<T> const& v) { this->x %= v.x; this->y %= v.y; return *this; }
     Vector<T>& operator  = (Vector<T> const& o) { this->x = o.x; this->y = o.y; return *this; }
+
     bool operator == (Vector<T> const& v) const { return this->x == v.x && this->y == v.y; } 
     bool operator != (Vector<T> const& v) const { return !(*this == v); } 
     bool operator <  (Vector<T> const& v) const { return magnitude2() < v.magnitude2(); } 
@@ -157,6 +161,9 @@ public:
     friend Vector<T> operator * (Vector<T> a, T f) { return a *= f; }
     friend Vector<T> operator / (Vector<T> a, T f) { return a /= f; }
     friend Vector<T> operator % (Vector<T> a, T f) { return a %= f; }
+    friend Vector<T> operator * (Vector<T> a, Vector<T> const& b) { return a *= b; }
+    friend Vector<T> operator / (Vector<T> a, Vector<T> const& b) { return a /= b; }
+    friend Vector<T> operator % (Vector<T> a, Vector<T> const& b) { return a %= b; }
 
     friend std::ostream& operator <<(std::ostream& os, Vector<T> const& v) {
         os << v.to_string();

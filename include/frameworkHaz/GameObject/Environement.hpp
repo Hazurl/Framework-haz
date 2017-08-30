@@ -23,6 +23,7 @@ public:
 	TEMP_ARGS GameObject* instantiate(Args... args);
 #undef TEMP_ARGS
 
+
 private:
 	std::vector<GameObject*> gos;
 

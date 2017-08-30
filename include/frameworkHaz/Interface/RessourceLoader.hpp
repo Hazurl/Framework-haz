@@ -15,8 +15,27 @@ class RessourceLoader : Singleton< RessourceLoader<TType, TAllocArg, TKey, TScen
 
 public:
 
+    static void setDefault(TAllocArg const& arg) {
+        if (S::get().default_type != nullptr) {
+            delete S::get().default_type;
+        }
+
+        S::get().default_type =  S::get().allocator.allocate(arg);
+    }
+
+    static TType* getDefault() {
+        return S::get().default_type;
+    }
+
     static TType* get(TSceneKey const& scene, TKey const& key) {
-        return S::get().ressources[scene][key];
+        try {
+            return S::get().ressources[scene][key];
+        } catch(...) {
+            if (S::get().default_type != nullptr) {
+                return S::get().default_type;
+            }
+            throw;
+        }
     }
 
     template<typename K = TKey, typename A = TAllocArg>
@@ -40,7 +59,14 @@ public:
     }
 
     static TType* getGlobal(TKey const& key) {
-        return S::get().global_ressources[key];
+        try {
+            return S::get().global_ressources[key];
+        } catch(...) {
+            if (S::get().default_type != nullptr) {
+                return S::get().default_type;
+            }
+            throw;
+        }
     }
 
     template<typename K = TKey, typename A = TAllocArg>
@@ -64,6 +90,10 @@ public:
     static void releaseAll () {
         releaseGlobal();
         releaseAllScenes();
+
+        if (S::get().default_type != nullptr) {
+            delete S::get().default_type;
+        }
     }
 
     static void releaseGlobal () {
@@ -102,6 +132,8 @@ private:
 
     std::map<TSceneKey, std::map<TKey, TType*>> ressources;
     std::map<TKey, TType*> global_ressources;
+
+    TType* default_type = nullptr;
 
     TAllocator allocator;
 };

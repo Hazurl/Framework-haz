@@ -31,7 +31,7 @@ Vectorf Transform::scale() const {
 Vectorf Transform::globalScale() const {
     auto* parent = gameobject()->parent();
     
-    return parent == nullptr ? scale() : scale() + parent->transform()->globalScale();
+    return parent == nullptr ? scale() : scale() * parent->transform()->globalScale();
 }
 
 float Transform::rotation() const {
@@ -57,7 +57,8 @@ void Transform::scale(Vectorf const& s) {
 }
 
 void Transform::globalScale(Vectorf const& s) {
-    sca = globalScale() - scale() + s;
+    auto* parent = gameobject()->parent();
+    sca = parent == nullptr ? s : (s / parent->transform()->globalScale());
 }
 
 void Transform::rotation(float r) {

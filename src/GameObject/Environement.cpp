@@ -1,4 +1,5 @@
 #include <frameworkHaz/GameObject/Environement.hpp>
+#include <list>
 
 BEG_NAMESPACE_HAZ
 
@@ -8,8 +9,9 @@ BEG_NAMESPACE_HAZ
 
 Environement::Environement() {}
 Environement::~Environement() {
-	for (auto* go : gos)
-        delete go;
+    for (auto* go : gos)
+        if (go->parent() == nullptr)
+            delete go;
     gos.clear();
 }
 
@@ -109,8 +111,15 @@ std::vector<const Component*> Environement::getAllComponents() const {
  */
 
 void Environement::print_to_tree() {
+    std::list<GameObject*> roots;
+
     for (unsigned int i = 0; i < gos.size(); ++i) {
-        print_to_tree_helper(gos[i], "", i == (gos.size() - 1));
+        if (gos[i]->parent() == nullptr)
+            roots.push_back(gos[i]);
+    }
+
+    for(auto* go : roots) {
+        print_to_tree_helper(go, "", go == roots.back());
     }
 }
 void Environement::print_to_tree_helper(GameObject* cur, std::string indent, bool is_last) {

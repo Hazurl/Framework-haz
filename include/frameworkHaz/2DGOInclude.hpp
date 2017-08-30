@@ -8,4 +8,12 @@
 #include <frameworkHaz/GameObject/Environement.hpp>
 #include <frameworkHaz/Tools/Time.hpp>
 
+#include <frameworkHaz/GameObject/2D/Physic.hpp>
+
+#include <frameworkHaz/GameObject/Component/2D/BoxCollider.hpp>
+#include <frameworkHaz/GameObject/Component/2D/CircleCollider.hpp>
+#include <frameworkHaz/GameObject/Component/2D/EdgeCollider.hpp>
+#include <frameworkHaz/GameObject/Component/2D/PolygonCollider.hpp>
+#include <frameworkHaz/GameObject/Component/2D/Transform.hpp>
+
 #endif
