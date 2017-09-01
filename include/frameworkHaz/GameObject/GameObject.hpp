@@ -151,11 +151,34 @@ class Environement;
 
 class Component : public UniqueID {
 public:
+    /* Virtual pure
+        Component* clone(GameObject* go) const
+            > Should return the same component as this and give it the gameobject passed in parameter
+    */
+    /* Virtual
+        std::string to_string() const
+            > Return a string that represented this compoennt
+            > Default is empty string
+
+        std::vector<std::string> pretty_strings () const
+            > Use in "GameObject::pretty_console"
+            > Same as "to_string" method but in multi-lines
+
+        void update(Time const&, Environement*)
+            > Update method called every frames
+
+        void onEnable()
+            > Method called when the gameobject switch from disbale to enable
+
+        void onDisable()
+            > Methdo called when the gameobject switch from enable to disable
+    */
+
     /* Ctor Dtor */
     Component(GameObject* go);
     virtual ~Component();    
     virtual Component* clone(GameObject* go) const = 0;    
-
+    
     /* Stringify */
     static std::map<long, std::string> component_to_string;
     
