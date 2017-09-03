@@ -5,7 +5,6 @@
 #include <frameworkHaz/2DTypedef.hpp>
 
 #include <frameworkHaz/GameObject/GameObject.hpp>
-#include <frameworkHaz/GameObject/Environement.hpp>
 #include <frameworkHaz/Tools/Time.hpp>
 
 #include <frameworkHaz/GameObject/2D/Physic.hpp>

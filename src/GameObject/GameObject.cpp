@@ -5,7 +5,8 @@ BEG_NAMESPACE_HAZ
 
 GameObject::GameObject(std::string const& name, _2D::Vectorf const& position, float rotation, _2D::Vectorf const& scale) 
     : components({}), tf(new _2D::Transform(this, position, scale, rotation)), _name(name) {
-
+    Engine::get().gameobjects.insert(this);
+    Engine::get().roots.insert(this);
 }
 
 GameObject::~GameObject() {
@@ -15,14 +16,31 @@ GameObject::~GameObject() {
     components.clear();
 
     for (auto* c : _childs)
-        delete c;
+        c->destroy();
 
     _childs.clear();
 
     delete tf;
 }
 
-GameObject::GameObject(GameObject const& o) : _parent(o._parent), tf(dynamic_cast<_2D::Transform*>(o.tf->clone(this))), _name(o._name), _tag(o._tag), is_active(o.is_active), _layers(o._layers) {
+void GameObject::destroy() {
+    Engine::get().gameobjects.erase(this);
+    if (_parent == nullptr)
+        Engine::get().roots.erase(this);
+
+    delete this;
+}
+
+void GameObject::destroyAll() {
+    for(auto* go : Engine::get().roots) {
+        delete go;
+    }
+    Engine::get().gameobjects.clear();
+    Engine::get().roots.clear();
+}
+
+GameObject::GameObject(GameObject const& o) 
+    : _parent(o._parent), tf(dynamic_cast<_2D::Transform*>(o.tf->clone(this))), _name(o._name), _tag(o._tag), is_active(o.is_active), _layers(o._layers) {
     // Components
     for (auto& p : o.components) 
         (components[p.first] = p.second->clone(this))->onEnable();
@@ -30,6 +48,21 @@ GameObject::GameObject(GameObject const& o) : _parent(o._parent), tf(dynamic_cas
     // Childs
     for (auto* child : o._childs) 
         _childs.push_back(new GameObject(*child));
+
+    Engine::get().gameobjects.insert(this);
+    Engine::get().roots.insert(this);
+}
+
+GameObject::GameObject(GameObject const& go, NS_HAZ_2D::Vectorf const& position, float rotation) : GameObject(go) {
+    tf->position(position);
+    tf->rotation(rotation);
+}
+
+GameObject::GameObject(GameObject const& go, GameObject& parent, NS_HAZ_2D::Vectorf const& position, float rotation) : GameObject(go) {
+    tf->position(position);
+    tf->rotation(rotation);
+    this->parent(&parent);
+    Engine::get().roots.erase(Engine::get().gameobjects.find(this));
 }
 
 GameObject& GameObject::operator=(GameObject go) {
@@ -57,15 +90,82 @@ std::vector<const Component*> GameObject::getComponents() const {
     return v;
 }
 
+GameObject* GameObject::findOfName(std::string const& name) {
+    for (auto* go : Engine::get().gameobjects)
+        if (go->compareName(name))
+            return go;
+
+    return nullptr;
+}
+
+GameObject* GameObject::findOfTag(std::string const& tag) {
+    for (auto* go : Engine::get().gameobjects)
+        if (go->compareTag(tag))
+            return go;
+
+    return nullptr;
+}
+
+std::vector<GameObject*> GameObject::findAllOfName(std::string const& name) {
+    std::vector<GameObject*> v = {};
+    for (auto* go : Engine::get().gameobjects)
+        if (go->compareName(name))
+            v.push_back(go);
+
+    return v;
+}
+
+std::vector<GameObject*> GameObject::findAllOfTag(std::string const& tag) {
+    std::vector<GameObject*> v = {};
+    for (auto* go : Engine::get().gameobjects)
+        if (go->compareTag(tag))
+            v.push_back(go);
+
+    return v;
+}
+
+std::vector<Component*> GameObject::getAllComponents() {
+    std::vector<Component*> v = {};
+    for (auto* go : Engine::get().gameobjects)
+        for (auto* c : go->getComponents())
+            v.push_back(c);
+
+    return v;
+}
+
+std::vector<GameObject*> GameObject::getAll() {
+    return { Engine::get().gameobjects.begin(), Engine::get().gameobjects.end() };
+}
+
+void GameObject::update() {
+    for(auto& p : components) {
+        p.second->update();
+    }
+}
+
 void GameObject::parent(GameObject* go) {
-    if (_parent != nullptr) {
-        auto it = std::find(_parent->_childs.begin(), _parent->_childs.end(), this);
-        if (it != _parent->childs().end())
-            _parent->_childs.erase(it);
+    if (go == _parent) {
+        return;
     }
 
-    if (go != nullptr)
+    if (_parent != nullptr) {
+        auto it = std::find(_parent->_childs.begin(), _parent->_childs.end(), this);
+        _parent->_childs.erase(it);
+
+        if (go == nullptr) {
+            Engine::get().roots.insert(this);
+            return;
+        }
+    }
+
+    if (go != nullptr) {
+        if (_parent == nullptr) {
+            Engine::get().roots.erase(this);
+        }
+
         go->_childs.push_back(this);
+    }
+    
     _parent = go;
 }
 

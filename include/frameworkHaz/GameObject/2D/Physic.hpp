@@ -3,15 +3,18 @@
 
 #include <frameworkHaz/Tools/Macro.hpp>
 #include <frameworkHaz/Tools/Utility.hpp>
-#include <frameworkHaz/GameObject/Environement.hpp>
-#include <frameworkHaz/GameObject/GameObject.hpp>
+
 #include <frameworkHaz/Geometry/2D/Vector.hpp>
+
+#include <frameworkHaz/GameObject/GameObject.hpp>
 
 #include <frameworkHaz/GameObject/Component/2D/Transform.hpp>
 #include <frameworkHaz/GameObject/Component/2D/BoxCollider.hpp>
 #include <frameworkHaz/GameObject/Component/2D/CircleCollider.hpp>
 #include <frameworkHaz/GameObject/Component/2D/EdgeCollider.hpp>
 #include <frameworkHaz/GameObject/Component/2D/PolygonCollider.hpp>
+
+#include <frameworkHaz/Engine/Engine.hpp>
 
 BEG_NAMESPACE_HAZ_COLLISION
 
@@ -37,7 +40,7 @@ class Physic {
 public:
 
 #define RAYCAST_SUB_BODY_A(T, F)\
-for (auto* col : e->getComponents<T>()) {\
+for (auto* col : GameObject::getComponentsOfType<T>()) {\
 	if (col->gameobject()->isOnAnyLayer(layers)) {\
 		if (Collision::F(*col, point)) {\
 			out[pos++] = col->gameobject();\
@@ -57,7 +60,7 @@ RAYCAST_SUB_BODY_A(PolygonCollider, point_in_polygon)\
 return pos;
 
 #define RAYCAST_SUB_BODY_V(T, F)\
-for (auto* col : e->getComponents<T>())\
+for (auto* col : GameObject::getComponentsOfType<T>())\
 	if (col->gameobject()->isOnAnyLayer(layers))\
 		if (Collision::F(*col, point))\
 			gos.push_back(col->gameobject());
@@ -71,45 +74,27 @@ RAYCAST_SUB_BODY_V(PolygonCollider, point_in_polygon)\
 return gos;
 
 	template<std::size_t N, typename = typename std::enable_if<(N > 0)>::type>
-	static std::size_t raycast(Environement const* e, Vectorf const& point, std::array<const GameObject*, N>& out, Layers layers = Layers::All) {
+	static std::size_t raycast(Vectorf const& point, std::array<GameObject*, N>& out, Layers layers = Layers::All) {
 		RAYCAST_BODY_A()
 	}
 
-	template<std::size_t N, typename = typename std::enable_if<(N > 0)>::type>
-	static std::size_t raycast(Environement* e, Vectorf const& point, std::array<GameObject*, N>& out, Layers layers = Layers::All) {
-		RAYCAST_BODY_A()
-	}
-
-	HAZ_FORCE_INLINE static bool raycast_any(Environement const* e, Vectorf const& point, Layers layers = Layers::All) {
-		std::array<const GameObject*, 1> out = {};
-		return raycast(e, point, out, layers) > 0;
-	}
-
-	static std::vector<const GameObject*> raycast_all(Environement const* e, Vectorf const& point, Layers layers = Layers::All) {
-		std::vector<const GameObject*> gos = {};
-		RAYCAST_BODY_V()	
-	}
-
-	static std::vector<GameObject*> raycast_all(Environement* e, Vectorf const& point, Layers layers = Layers::All) {
+	static std::vector<GameObject*> raycast_all(Vectorf const& point, Layers layers = Layers::All) {
 		std::vector<GameObject*> gos = {};
 		RAYCAST_BODY_V()	
 	}
 
-	static GameObject* raycast_first(Environement* e, Vectorf const& point, Layers layers = Layers::All) {
+	static GameObject* raycast_first(Vectorf const& point, Layers layers = Layers::All) {
 		std::array<GameObject*, 1> out = {};
-		raycast(e, point, out, layers);
-		return raycast(e, point, out, layers) > 0 ? out[0] : nullptr;	
+		raycast(point, out, layers);
+		return raycast(point, out, layers) > 0 ? out[0] : nullptr;	
 	}
 
-	static const GameObject* raycast_first(Environement const* e, Vectorf const& point, Layers layers = Layers::All) {
-		std::array<const GameObject*, 1> out = {};
-		raycast(e, point, out, layers);
-		return raycast(e, point, out, layers) > 0 ? out[0] : nullptr;	
-	}
 };
 
-#undef RAYCAST_BODY
-#undef RAYCAST_SUB_BODY
+#undef RAYCAST_BODY_V
+#undef RAYCAST_SUB_BODY_V
+#undef RAYCAST_BODY_A
+#undef RAYCAST_SUB_BODY_A
 
 END_NAMESPACE_HAZ_2D
 

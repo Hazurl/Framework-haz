@@ -47,7 +47,7 @@ void Component::tag(std::string const& t) {
     return go->tag(t);
 }
 
-void Component::update(Time const&, Environement* ) {}
+void Component::update() {}
 void Component::onEnable() {}
 void Component::onDisable() {}
 

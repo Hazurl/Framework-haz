@@ -7,6 +7,7 @@ DIR += Benchmark
 DIR += Tools 
 DIR += GameObject GameObject/2D GameObject/Component GameObject/Component/2D
 DIR += Geometry Geometry/2D
+DIR += Engine
 DIR += Serialization
 # Directories with src/ prefix
 SRC_DIR := $(addprefix src/,$(DIR))

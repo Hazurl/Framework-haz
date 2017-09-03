@@ -9,6 +9,9 @@
 #include <frameworkHaz/Tools/Time.hpp>
 
 #include <frameworkHaz/Interface/UniqueID.hpp>
+#include <frameworkHaz/Interface/Allocator.hpp>
+
+#include <frameworkHaz/Engine/Engine.hpp>
 
 #include <map>
 #include <vector>
@@ -58,12 +61,29 @@ class Component;
 
 class GameObject {
 public:
-    /* Ctor Dtor ... */
-    GameObject(std::string const& name, _2D::Vectorf const& position = _2D::Vectorf::zero(), float rotation = 0, _2D::Vectorf const& scale = _2D::Vectorf::units());
-    GameObject(GameObject const& go);
-    GameObject& operator=(GameObject go);
-    ~GameObject();
+
+    class CopyAllocator : Allocator<GameObject, GameObject const& > {
+    public:
+        virtual GameObject* allocate(GameObject const& go) {
+            return new GameObject(go);
+        }
     
+        virtual void deallocate(GameObject* go) {
+            go->destroy();
+        }
+    };
+
+    /* Ctor Dtor ... */
+    GameObject(std::string const& name, NS_HAZ_2D::Vectorf const& position = NS_HAZ_2D::Vectorf::zero(), float rotation = 0, NS_HAZ_2D::Vectorf const& scale = NS_HAZ_2D::Vectorf::units());
+    GameObject(GameObject const& go);
+    GameObject(GameObject const& go, NS_HAZ_2D::Vectorf const& position, float rotation = 0);
+    GameObject(GameObject const& go, GameObject& parent, NS_HAZ_2D::Vectorf const& position = NS_HAZ_2D::Vectorf::zero(), float rotation = 0);
+    GameObject& operator=(GameObject go);
+private:
+    ~GameObject();
+public:
+    void destroy();
+    static void destroyAll();
     static void swap(GameObject& a, GameObject& b);
 
     /* Components Modifiers */
@@ -93,8 +113,22 @@ public:
     TEMP_COMP const T* getComponentInParents() const;
     TEMP_COMP std::vector<T*> getComponentsInParents();
     TEMP_COMP std::vector<const T*> getComponentsInParents() const;
+
+    TEMP_COMP static T* getComponentOfType();
+    TEMP_COMP static std::vector<T*> getComponentsOfType();
+
 #undef TEMP_COMP
 
+    static GameObject* findOfName(std::string const& name);
+    static GameObject* findOfTag(std::string const& tag);
+    static std::vector<GameObject*> findAllOfName(std::string const& name);
+    static std::vector<GameObject*> findAllOfTag(std::string const& tag);
+
+    static std::vector<Component*> getAllComponents();
+    static std::vector<GameObject*> getAll();
+
+    void update();
+    
     /* Parent / Childs */
     void parent(GameObject* go);
     GameObject* parent();
@@ -104,8 +138,8 @@ public:
     std::vector<GameObject const*> childs() const;
 
     /* Transform */
-    _2D::Transform* transform();
-    _2D::Transform const* transform() const;
+    NS_HAZ_2D::Transform* transform();
+    NS_HAZ_2D::Transform const* transform() const;
     
     /* Name */
     std::string to_string() const;
@@ -138,7 +172,7 @@ private:
     GameObject* _parent = nullptr;
     std::vector<GameObject*> _childs = {};
 
-    _2D::Transform* tf;
+    NS_HAZ_2D::Transform* tf;
 
     std::string _name;
     std::string _tag = "";
@@ -146,8 +180,6 @@ private:
     bool is_active = true;
     Layers _layers = Layers::Default | Layers::RayCast;
 };
-
-class Environement;
 
 class Component : public UniqueID {
 public:
@@ -164,7 +196,7 @@ public:
             > Use in "GameObject::pretty_console"
             > Same as "to_string" method but in multi-lines
 
-        void update(Time const&, Environement*)
+        void update()
             > Update method called every frames
 
         void onEnable()
@@ -188,8 +220,8 @@ public:
     /* Getter GameObject / Transform */
     GameObject* gameobject ();
     const GameObject* gameobject () const;
-    _2D::Transform* transform ();
-    const _2D::Transform* transform () const;
+    NS_HAZ_2D::Transform* transform ();
+    const NS_HAZ_2D::Transform* transform () const;
 
     /* Tag / Name */
     std::string name() const;
@@ -227,7 +259,7 @@ public:
 #undef TEMP_COMP
     
     /* Update */
-    virtual void update(Time const& t, Environement* e);
+    virtual void update();
 
     /* Event when disble or enable */
     virtual void onEnable();
@@ -243,7 +275,7 @@ public:
 
 private:
     GameObject* go = nullptr;
-    _2D::Transform* tf = nullptr;
+    NS_HAZ_2D::Transform* tf = nullptr;
 };
 
 #define TEMP_COMP template<typename T, typename>
@@ -468,6 +500,25 @@ TEMP_COMP std::vector<const T*> GameObject::getComponentsInParents() const {
         for (auto* cp : _parent->getComponentsInParents<T>())
             v.push_back(cp);
     }
+    return v;
+}
+
+TEMP_COMP
+T* GameObject::getComponentOfType() {
+    for (auto* go : Engine::get().gameobjects)
+        for (auto* c : go->getComponentsInChilds<T>())
+            return c;
+
+    return nullptr;
+}
+
+TEMP_COMP
+std::vector<T*> GameObject::getComponentsOfType() {
+    std::vector<T*> v = {};
+    for (auto* go : Engine::get().gameobjects)
+        for (auto* c : go->getComponentsInChilds<T>())
+            v.push_back(c);
+
     return v;
 }
 
