@@ -4,6 +4,7 @@
 #include <frameworkHaz/Tools/Macro.hpp>
 #include <frameworkHaz/2DTypedef.hpp>
 
+#include <frameworkHaz/Engine/Engine.hpp>
 #include <frameworkHaz/GameObject/GameObject.hpp>
 #include <frameworkHaz/Tools/Time.hpp>
 

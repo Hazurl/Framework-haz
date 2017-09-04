@@ -26,7 +26,8 @@ void Engine::start() {
 }
 
 void Engine::update() {
-    for(auto* go : get().roots) {
+    get()._time->update();
+    for(auto* go : get().gameobjects) {
         go->update();
     }
 }

@@ -39,6 +39,15 @@ void GameObject::destroyAll() {
     Engine::get().roots.clear();
 }
 
+void GameObject::detach() {
+    Engine::get().gameobjects.erase(this);
+    if (_parent == nullptr)
+        Engine::get().roots.erase(this);
+
+    for (auto* c : _childs)
+        c->detach();
+}
+
 GameObject::GameObject(GameObject const& o) 
     : _parent(o._parent), tf(dynamic_cast<_2D::Transform*>(o.tf->clone(this))), _name(o._name), _tag(o._tag), is_active(o.is_active), _layers(o._layers) {
     // Components

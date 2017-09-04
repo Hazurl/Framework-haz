@@ -79,11 +79,11 @@ public:
     GameObject(GameObject const& go, NS_HAZ_2D::Vectorf const& position, float rotation = 0);
     GameObject(GameObject const& go, GameObject& parent, NS_HAZ_2D::Vectorf const& position = NS_HAZ_2D::Vectorf::zero(), float rotation = 0);
     GameObject& operator=(GameObject go);
-private:
     ~GameObject();
-public:
+    
     void destroy();
     static void destroyAll();
+    void detach();
     static void swap(GameObject& a, GameObject& b);
 
     /* Components Modifiers */
