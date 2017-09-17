@@ -782,7 +782,7 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = /home/hazurl/github/Magic-Tower/Framework-haz/src \
-                         /home/hazurl/github/Magic-Tower/Framework-haz/include/frameworkHaz
+                         /home/hazurl/github/Magic-Tower/Framework-haz/include/haz
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -2072,7 +2072,7 @@ SEARCH_INCLUDES        = YES
 # preprocessor.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           = /home/hazurl/github/Magic-Tower/Framework-haz/include/frameworkHaz
+INCLUDE_PATH           = /home/hazurl/github/Magic-Tower/Framework-haz/include/haz
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the

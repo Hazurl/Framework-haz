@@ -8,6 +8,7 @@ DIR += Tools
 DIR += GameObject GameObject/2D GameObject/Component GameObject/Component/2D
 DIR += Geometry Geometry/2D
 DIR += Engine
+DIR += Event
 DIR += Serialization
 # Directories with src/ prefix
 SRC_DIR := $(addprefix src/,$(DIR))
@@ -20,8 +21,8 @@ SRC := $(foreach d,$(SRC_DIR),$(wildcard $(d)/*.cpp))
 # Main directories
 MAIN_DIR := src/
 # Main file 
-# Pick one : main_go.cpp, main_benchmark.cpp, main_serialization.cpp
-MAIN := main_go.cpp
+# Pick one : main_go.cpp, main_benchmark.cpp, main_serialization.cpp, main_test.cpp
+MAIN := main_test.cpp
 # Main path
 MAIN_PATH := $(MAIN_DIR)/$(MAIN)
 # Main .o
@@ -33,15 +34,25 @@ MAIN_OBJ := $(patsubst %.cpp,build/main/%.o,$(MAIN))
 # Name of the executable
 DEST := build/main_app
 # Build Directories
-BUILD_DIR := build build/main build/src $(addprefix build/src/,$(SRC_DIR)) build/lib build/shared $(addprefix build/shared/,$(SRC_DIR))
+BUILD_DIR := build build/main build/src $(addprefix build/src/,$(SRC_DIR)) $(addprefix build/deps/,$(SRC_DIR)) build/lib build/shared $(addprefix build/shared/,$(SRC_DIR))
 # .o files
 OBJ := $(patsubst %.cpp,build/src/%.o,$(SRC))
 # Shared files
 SHARED_OBJ := $(patsubst %.cpp,build/shared/%.o,$(SRC))
 # Lib destination
-DEST_LIB := build/lib/libframeworkHaz.so
+DEST_LIB := build/lib/libhaz.so
 # Include folders
 INCLUDE_FOLDER := include/
+
+##############################################
+#                    DEPS                    #
+##############################################
+# All .d files corresponding to each .cpp
+DEPS := $(patsubst %.cpp,build/deps/%.d,$(SRC))
+# Deps folder
+DEPS_FOLDER := build/deps
+# Flags
+DEPS_FLAGS := -MMD -MP
 
 ##############################################
 #                    FLAGS                   #
@@ -73,7 +84,7 @@ $(DEST): $(BUILD_DIR) $(OBJ) $(MAIN_OBJ)
 # Compile a file into a object
 build/src/%.o: %.cpp
 	@echo "\033[1m:: Building" "$<" "\033[0m"
-	@g++ -c $(INCLUDE) $(OPTIM) $(FLAGS) -o "$@" "$<"
+	@g++ -c $(INCLUDE) $(OPTIM) $(FLAGS) $(DEPS_FLAGS) -o "$@" "$<"
 
 # Compile a file into a object
 $(MAIN_OBJ): $(MAIN_PATH)
@@ -115,9 +126,12 @@ again:
 
 # Use fgen
 file:
-	fgen -p=include/frameworkHaz/$(dir)/$(name).hpp -t=fgenTemplate/hppTemplate.hpp class=$(name) define=$(name)
-	fgen -p=src/$(dir)/$(name).cpp -t=fgenTemplate/cppTemplate.cpp class=$(name) include=frameworkHaz/$(dir)/$(name).hpp
+	fgen -p=include/haz/$(dir)/$(name).hpp -t=fgenTemplate/hppTemplate.hpp class=$(name) define=$(name)
+	fgen -p=src/$(dir)/$(name).cpp -t=fgenTemplate/cppTemplate.cpp class=$(name) include=haz/$(dir)/$(name).hpp
 
+header:
+	fgen -p=include/haz/$(dir)/$(name).hpp -t=fgenTemplate/hppTemplate.hpp class=$(name) define=$(name)
+	
 # Compile to shared objects
 build/shared/%.o: %.cpp
 	@echo "\033[1m:: Building shared" "$<" "\033[0m"
@@ -140,8 +154,8 @@ lib: $(DEST_LIB)
 install: lib
 	@echo "Copy lib to /usr/lib ..."
 	@cp $(DEST_LIB) /usr/lib/
-	@mkdir /usr/include/frameworkHaz
-	@echo "Copy includes files to /usr/include/frameworkHaz ..."
+	@mkdir /usr/include/haz
+	@echo "Copy includes files to /usr/include/haz ..."
 	@cp -a $(INCLUDE_FOLDER)/. /usr/include/
 	@echo -n "\033[34m"
 	@echo "------------------"
@@ -150,5 +164,20 @@ install: lib
 	@echo -n "\033[0m"
 
 clean-lib:
-	rm /usr/lib/libframeworkHaz.so
-	rm -rf /usr/include/frameworkHaz
+	rm /usr/lib/libhaz.so
+	rm -rf /usr/include/haz
+
+valgrind: $(DEST)
+	@echo -n "\033[34m"
+	@echo "----------------"
+	@echo "  Run Valgrind  "
+	@echo "----------------"
+	@echo -n "\033[0m"
+	@valgrind --leak-check=full --show-leak-kinds=all $(DEST)
+	@echo -n "\033[34m"
+	@echo "----------------"
+	@echo "      Stop      "
+	@echo "----------------"
+	@echo -n "\033[0m"
+
+-include $(DEPS)

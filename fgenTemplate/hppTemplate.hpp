@@ -1,7 +1,7 @@
 #ifndef __HAZ_{{class:upper}}
 #define __HAZ_{{class:upper}}
 
-#include <frameworkHaz/Tools/Macro.hpp>
+#include <haz/Tools/Macro.hpp>
 
 BEG_NAMESPACE_HAZ
 
