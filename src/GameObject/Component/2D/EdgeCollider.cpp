@@ -1,4 +1,4 @@
-#include <frameworkHaz/GameObject/Component/2D/EdgeCollider.hpp>
+#include <haz/GameObject/Component/2D/EdgeCollider.hpp>
 
 BEG_NAMESPACE_HAZ_2D
 

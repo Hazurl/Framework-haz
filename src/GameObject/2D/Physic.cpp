@@ -1,4 +1,4 @@
-#include <frameworkHaz/GameObject/2D/Physic.hpp>
+#include <haz/GameObject/2D/Physic.hpp>
 
 BEG_NAMESPACE_HAZ_COLLISION
 

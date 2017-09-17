@@ -1,4 +1,7 @@
-#include <frameworkHaz/Benchmark/Benchmark.hpp>
+#include <haz/Benchmark/Benchmark.hpp>
+
+#include <vector>
+#include <haz/Container/DynamicArray.hpp>
 
 BEG_NAMESPACE_HAZ
 

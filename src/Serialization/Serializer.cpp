@@ -1,4 +1,4 @@
-/*#include <frameworkHaz/Serialization/Serializer.hpp>
+/*#include <haz/Serialization/Serializer.hpp>
 
 BEG_NAMESPACE_HAZ_SERIALIZATION
 

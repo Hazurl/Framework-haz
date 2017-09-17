@@ -1,4 +1,4 @@
-#include <frameworkHaz/GameObject/Component/2D/CircleCollider.hpp>
+#include <haz/GameObject/Component/2D/CircleCollider.hpp>
 
 BEG_NAMESPACE_HAZ_2D
 

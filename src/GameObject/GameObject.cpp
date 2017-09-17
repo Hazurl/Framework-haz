@@ -1,10 +1,10 @@
-#include <frameworkHaz/GameObject/GameObject.hpp>
-#include <frameworkHaz/GameObject/Component/2D/Transform.hpp>
+#include <haz/GameObject/GameObject.hpp>
+#include <haz/GameObject/Component/2D/Transform.hpp>
 
 BEG_NAMESPACE_HAZ
 
-GameObject::GameObject(std::string const& name, _2D::Vectorf const& position, float rotation, _2D::Vectorf const& scale) 
-    : components({}), tf(new _2D::Transform(this, position, scale, rotation)), _name(name) {
+GameObject::GameObject(std::string const& name, NS_HAZ_2D::Vectorf const& position, float rotation, NS_HAZ_2D::Vectorf const& scale) 
+    : components({}), tf(new NS_HAZ_2D::Transform(this, position, scale, rotation)), _name(name) {
     Engine::get().gameobjects.insert(this);
     Engine::get().roots.insert(this);
 }
@@ -49,7 +49,7 @@ void GameObject::detach() {
 }
 
 GameObject::GameObject(GameObject const& o) 
-    : _parent(o._parent), tf(dynamic_cast<_2D::Transform*>(o.tf->clone(this))), _name(o._name), _tag(o._tag), is_active(o.is_active), _layers(o._layers) {
+    : _parent(o._parent), tf(dynamic_cast<NS_HAZ_2D::Transform*>(o.tf->clone(this))), _name(o._name), _tag(o._tag), is_active(o.is_active), _layers(o._layers) {
     // Components
     for (auto& p : o.components) 
         (components[p.first] = p.second->clone(this))->onEnable();
@@ -199,11 +199,11 @@ std::vector<GameObject*> GameObject::childs() {
     return _childs;
 }
 
-_2D::Transform* GameObject::transform() {
+NS_HAZ_2D::Transform* GameObject::transform() {
     return tf;
 }
 
-const _2D::Transform* GameObject::transform() const {
+const NS_HAZ_2D::Transform* GameObject::transform() const {
     return tf;
 }
 

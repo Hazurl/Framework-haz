@@ -1,18 +1,18 @@
-#include <frameworkHaz/GameObject/GameObject.hpp>
+#include <haz/GameObject/GameObject.hpp>
 
-#include <frameworkHaz/GameObject/2D/Physic.hpp>
+#include <haz/GameObject/2D/Physic.hpp>
 
-#include <frameworkHaz/GameObject/Component/2D/Transform.hpp>
-#include <frameworkHaz/GameObject/Component/2D/BoxCollider.hpp>
-#include <frameworkHaz/GameObject/Component/2D/CircleCollider.hpp>
+#include <haz/GameObject/Component/2D/Transform.hpp>
+#include <haz/GameObject/Component/2D/BoxCollider.hpp>
+#include <haz/GameObject/Component/2D/CircleCollider.hpp>
 
-#include <frameworkHaz/Tools/Macro.hpp>
+#include <haz/Tools/Macro.hpp>
 #include <iostream>
 
-#include <frameworkHaz/Interface/Factory.hpp>
-#include <frameworkHaz/Interface/RessourceLoader.hpp>
+#include <haz/Interface/Factory.hpp>
+#include <haz/Interface/RessourceLoader.hpp>
 
-//#include <frameworkHaz/2DGOInclude.hpp>
+//#include <haz/2DGOInclude.hpp>
 
 
 int main (int , char ** ) {

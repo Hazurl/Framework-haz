@@ -1,4 +1,4 @@
-#include <frameworkHaz/Benchmark/Benchmark.hpp>
+#include <haz/Benchmark/Benchmark.hpp>
 
 
 int main (int , char ** ) {

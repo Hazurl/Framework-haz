@@ -1,4 +1,4 @@
-#include <frameworkHaz/GameObject/GameObject.hpp>
+#include <haz/GameObject/GameObject.hpp>
 
 BEG_NAMESPACE_HAZ
 
@@ -23,11 +23,11 @@ const GameObject* Component::gameobject () const {
     return go;
 }
 
-const _2D::Transform* Component::transform () const {
+const NS_HAZ_2D::Transform* Component::transform () const {
     return tf;
 }
 
-_2D::Transform* Component::transform () {
+NS_HAZ_2D::Transform* Component::transform () {
     return tf;
 }
 

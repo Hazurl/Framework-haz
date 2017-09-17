@@ -1,7 +1,7 @@
-#include <frameworkHaz/Engine/Engine.hpp>
+#include <haz/Engine/Engine.hpp>
 
-#include <frameworkHaz/GameObject/GameObject.hpp>
-#include <frameworkHaz/Tools/Time.hpp>
+#include <haz/GameObject/GameObject.hpp>
+#include <haz/Tools/Time.hpp>
 
 BEG_NAMESPACE_HAZ
 
